@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PCSREADY - VA Loan Eligibility Checker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#414938",
+                    "secondary-fixed-dim": "#efc142",
+                    "on-secondary-fixed": "#251a00",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#ebf1ff",
+                    "outline": "#74777f",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#adc8f5",
+                    "surface-tint": "#455f87",
+                    "secondary-container": "#fecf4f",
+                    "inverse-primary": "#adc8f5",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#d3daea",
+                    "on-surface": "#151c27",
+                    "primary": "#022448",
+                    "primary-fixed": "#d5e3ff",
+                    "tertiary": "#1f2617",
+                    "background": "#f9f9ff",
+                    "tertiary-fixed": "#dde6ce",
+                    "tertiary-container": "#343c2b",
+                    "surface-bright": "#f9f9ff",
+                    "surface-container-highest": "#dce2f3",
+                    "on-tertiary-fixed": "#171e0f",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#43474e",
+                    "surface-container-high": "#e2e8f8",
+                    "surface-container": "#e7eefe",
+                    "surface-variant": "#dce2f3",
+                    "secondary": "#765b00",
+                    "outline-variant": "#c4c6cf",
+                    "inverse-surface": "#2a313d",
+                    "primary-container": "#1e3a5f",
+                    "secondary-fixed": "#ffdf94",
+                    "tertiary-fixed-dim": "#c1cab3",
+                    "on-secondary-container": "#725800",
+                    "on-error": "#ffffff",
+                    "surface-container-low": "#f0f3ff",
+                    "surface": "#f9f9ff",
+                    "on-primary-fixed-variant": "#2d486d",
+                    "on-secondary-fixed-variant": "#594400",
+                    "on-primary-fixed": "#001c3b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Barlow", "sans-serif"],
+                    "body": ["Inter", "sans-serif"],
+                    "label": ["Inter", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Barlow', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-20">
+<!-- TopAppBar -->
+<header class="bg-[#1e3a5f] dark:bg-[#022448] text-[#ffffff] dark:text-[#fecf4f] rounded-none w-full sticky top-0 flex justify-between items-center w-full px-6 h-16 z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#fecf4f]" data-icon="explore">explore</span>
+<span class="font-['Barlow'] font-black text-xl tracking-widest text-[#fecf4f]">PCSREADY</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-['Barlow'] font-bold tracking-tighter uppercase text-sm text-[#ffffff]/70 hover:bg-[#022448] transition-all px-2 py-1" href="#">Home</a>
+<a class="font-['Barlow'] font-bold tracking-tighter uppercase text-sm text-[#ffffff]/70 hover:bg-[#022448] transition-all px-2 py-1" href="#">BAH</a>
+<a class="font-['Barlow'] font-bold tracking-tighter uppercase text-sm text-[#fecf4f] border-b-2 border-[#fecf4f] transition-all px-2 py-1" href="#">VA Loan</a>
+<a class="font-['Barlow'] font-bold tracking-tighter uppercase text-sm text-[#ffffff]/70 hover:bg-[#022448] transition-all px-2 py-1" href="#">Timeline</a>
+</div>
+<div class="h-8 w-8 bg-surface-container rounded-full flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="h-full w-full object-cover" data-alt="clean minimalist vector avatar of a professional person in a military uniform profile style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB2UIHmUStT_-gS-Dg9D4kCUZDKxcm5C8PFPX-EWWMeQF8RoEg2NJHH9tyZqDgcxSCR6koyjbJt3TWdZxD1O_ARrrKXSsLcVs9UJRjvRTvx0E-RXstrKz6UO3aEUwjHYeaiAR-wk8bT9uLh33-_jk7hK9nYDT2u3ZYkon8J73W_m_koOFzAJJNVcchPvQaMmfBVM4PluTJJcO0xvsd8HWs8dCfIA70l3v41C--g4hjbm5hvFmiKQiFW8ZMwC7Q-A0UEWkqWXLzl9w5"/>
+</div>
+</div>
+</header>
+<!-- Mission HUD Status Bar -->
+<div class="bg-tertiary-container flex items-center px-6 py-2 gap-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+<span class="text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest font-body">Status: Pre-Assessment</span>
+<span class="text-secondary font-bold material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+<span class="text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest font-body">Location: Norfolk, VA</span>
+<span class="text-secondary font-bold material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+<span class="text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest font-body">PCS Date: 12-OCT-2024</span>
+</div>
+<main class="max-w-md mx-auto px-4 py-8 space-y-8">
+<!-- Header Section -->
+<section class="space-y-2">
+<p class="text-secondary font-bold text-[10px] uppercase tracking-[0.2em]">Technical Assessment</p>
+<h1 class="text-primary text-4xl font-black leading-none uppercase italic tracking-tighter">Are You VA Loan Eligible?</h1>
+<p class="text-on-surface-variant text-sm font-medium border-l-4 border-secondary pl-4 py-1">Mission-critical verification for military home financing.</p>
+</section>
+<!-- Assessment Form -->
+<section class="bg-surface-container-lowest p-6 shadow-[0_4px_0_0_rgba(2,36,72,0.1)] border-t-4 border-primary">
+<form class="space-y-6">
+<!-- Service Status -->
+<div class="space-y-4">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Service Status</label>
+<div class="grid grid-cols-1 gap-2">
+<label class="flex items-center p-4 bg-surface-container-low border-b-2 border-primary cursor-pointer hover:bg-surface-container transition-colors group">
+<input checked="" class="hidden peer" name="status" type="radio"/>
+<span class="w-4 h-4 border-2 border-primary flex-shrink-0 mr-4 peer-checked:bg-secondary"></span>
+<span class="text-sm font-bold uppercase tracking-tight text-primary">Active Duty</span>
+</label>
+<label class="flex items-center p-4 bg-surface-container-low border-b-2 border-primary cursor-pointer hover:bg-surface-container transition-colors group">
+<input class="hidden peer" name="status" type="radio"/>
+<span class="w-4 h-4 border-2 border-primary flex-shrink-0 mr-4 peer-checked:bg-secondary"></span>
+<span class="text-sm font-bold uppercase tracking-tight text-primary">Veteran / Retired</span>
+</label>
+<label class="flex items-center p-4 bg-surface-container-low border-b-2 border-primary cursor-pointer hover:bg-surface-container transition-colors group">
+<input class="hidden peer" name="status" type="radio"/>
+<span class="w-4 h-4 border-2 border-primary flex-shrink-0 mr-4 peer-checked:bg-secondary"></span>
+<span class="text-sm font-bold uppercase tracking-tight text-primary">National Guard / Reserve</span>
+</label>
+</div>
+</div>
+<!-- Date Selection -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Service Start</label>
+<input class="w-full bg-surface-container-high border-none border-b-2 border-primary text-sm font-bold focus:border-secondary focus:ring-0" type="date"/>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Service End</label>
+<input class="w-full bg-surface-container-high border-none border-b-2 border-primary text-sm font-bold focus:border-secondary focus:ring-0" type="date"/>
+</div>
+</div>
+<!-- Branch Selection -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Service Branch</label>
+<select class="w-full bg-surface-container-high border-none border-b-2 border-primary text-sm font-bold focus:border-secondary focus:ring-0">
+<option>U.S. ARMY</option>
+<option>U.S. NAVY</option>
+<option>U.S. AIR FORCE</option>
+<option>U.S. MARINE CORPS</option>
+<option>U.S. COAST GUARD</option>
+<option>U.S. SPACE FORCE</option>
+</select>
+</div>
+<button class="w-full bg-primary text-on-primary font-headline font-bold uppercase tracking-widest py-4 hover:bg-primary-container transition-colors active:scale-[0.98]" type="button">
+                    Verify Eligibility
+                </button>
+</form>
+</section>
+<!-- Results: Likely Eligible -->
+<section class="bg-primary text-white p-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2 opacity-10 scale-150 rotate-12">
+<span class="material-symbols-outlined text-[120px]" data-icon="verified_user">verified_user</span>
+</div>
+<div class="relative z-10 space-y-4">
+<div class="flex items-center gap-3">
+<div class="bg-secondary-container text-on-secondary-container p-1 flex items-center justify-center">
+<span class="material-symbols-outlined font-bold" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<h2 class="font-headline font-black text-2xl uppercase tracking-tighter">Likely Eligible</h2>
+</div>
+<p class="text-primary-container text-xs font-medium uppercase tracking-wider leading-relaxed">
+                    Based on typical service requirements (90 days active during wartime), you meet the preliminary criteria for a VA Home Loan.
+                </p>
+<div class="pt-4 border-t border-white/20">
+<span class="text-[10px] font-bold uppercase opacity-60">Funding Fee Index (2024)</span>
+<div class="mt-2 grid grid-cols-2 gap-px bg-white/10">
+<div class="bg-primary p-2 text-[10px] font-bold uppercase tracking-tighter">Down Payment</div>
+<div class="bg-primary p-2 text-[10px] font-bold uppercase tracking-tighter text-right">Fee (1st Use)</div>
+<div class="bg-primary-container/30 p-2 text-[10px] font-medium">None (0%)</div>
+<div class="bg-primary-container/30 p-2 text-[10px] font-bold text-right">2.15%</div>
+<div class="bg-primary-container/30 p-2 text-[10px] font-medium">5% or more</div>
+<div class="bg-primary-container/30 p-2 text-[10px] font-bold text-right">1.50%</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Benefits Callout -->
+<section class="bg-surface-container-low p-6 space-y-4">
+<h3 class="font-headline font-bold text-lg uppercase tracking-tight text-primary">Strategic Advantages</h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-xl" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+<div class="space-y-0.5">
+<p class="text-sm font-bold uppercase tracking-tighter text-primary">Zero Down Payment</p>
+<p class="text-xs text-on-surface-variant leading-tight">Purchase a home with $0 down up to conforming loan limits.</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-xl" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+<div class="space-y-0.5">
+<p class="text-sm font-bold uppercase tracking-tighter text-primary">No Monthly PMI</p>
+<p class="text-xs text-on-surface-variant leading-tight">Private Mortgage Insurance is never required, saving hundreds monthly.</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-xl" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+<div class="space-y-0.5">
+<p class="text-sm font-bold uppercase tracking-tighter text-primary">Competitive Rates</p>
+<p class="text-xs text-on-surface-variant leading-tight">VA loan rates are consistently lower than conventional financing.</p>
+</div>
+</li>
+</ul>
+</section>
+<!-- Action Card -->
+<div class="bg-white p-6 border-b-8 border-secondary flex items-center justify-between group cursor-pointer hover:bg-surface-container transition-all">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Next Objective</p>
+<h4 class="font-headline font-bold text-xl uppercase tracking-tighter text-primary">Secure Certificate (COE)</h4>
+</div>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-0 bg-[#f0f3ff] dark:bg-[#1e3a5f] text-[#1e3a5f] dark:text-[#fecf4f]">
+<a class="flex flex-col items-center justify-center text-[#1e3a5f] dark:text-white/60 py-1 h-full w-full hover:bg-[#e7eefe] transition-transform duration-75 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] font-bold text-[10px] uppercase tracking-wider">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1e3a5f] dark:text-white/60 py-1 h-full w-full hover:bg-[#e7eefe] transition-transform duration-75 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-['Inter'] font-bold text-[10px] uppercase tracking-wider">BAH</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#fecf4f] dark:bg-[#765b00] text-[#1e3a5f] dark:text-white rounded-none py-1 h-full w-full transition-transform duration-75 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="assured_workload">assured_workload</span>
+<span class="font-['Inter'] font-bold text-[10px] uppercase tracking-wider">VA Loan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1e3a5f] dark:text-white/60 py-1 h-full w-full hover:bg-[#e7eefe] transition-transform duration-75 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
+<span class="font-['Inter'] font-bold text-[10px] uppercase tracking-wider">Timeline</span>
+</a>
+</nav>
+</body></html>

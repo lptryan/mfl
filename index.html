@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PCSREADY | Tactical Relocation Intelligence</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-tertiary-fixed-variant":"#414938","secondary-fixed-dim":"#efc142",
+          "on-secondary-fixed":"#251a00","on-primary":"#ffffff",
+          "inverse-on-surface":"#ebf1ff","outline":"#74777f","error":"#ba1a1a",
+          "primary-fixed-dim":"#adc8f5","surface-tint":"#455f87",
+          "secondary-container":"#fecf4f","inverse-primary":"#adc8f5",
+          "surface-container-lowest":"#ffffff","on-error-container":"#93000a",
+          "surface-dim":"#d3daea","on-surface":"#151c27","primary":"#022448",
+          "primary-fixed":"#d5e3ff","tertiary":"#1f2617","background":"#f9f9ff",
+          "tertiary-fixed":"#dde6ce","tertiary-container":"#343c2b",
+          "surface-bright":"#f9f9ff","surface-container-highest":"#dce2f3",
+          "on-tertiary-fixed":"#171e0f","on-tertiary":"#ffffff",
+          "on-surface-variant":"#43474e","surface-container-high":"#e2e8f8",
+          "surface-container":"#e7eefe","surface-variant":"#dce2f3",
+          "secondary":"#765b00","outline-variant":"#c4c6cf",
+          "inverse-surface":"#2a313d","primary-container":"#1e3a5f",
+          "secondary-fixed":"#ffdf94","tertiary-fixed-dim":"#c1cab3",
+          "on-secondary-container":"#725800","on-error":"#ffffff",
+          "surface-container-low":"#f0f3ff","surface":"#f9f9ff",
+          "on-primary-fixed-variant":"#2d486d","on-secondary-fixed-variant":"#594400",
+          "on-primary-container":"#8aa4cf","error-container":"#ffdad6",
+          "on-background":"#151c27","on-secondary":"#ffffff",
+          "on-tertiary-container":"#9ea691","on-primary-fixed":"#001c3b"
+        },
+        borderRadius:{"DEFAULT":"0px","lg":"0px","xl":"0px","full":"0px"},
+        fontFamily:{
+          "headline":["Barlow","sans-serif"],
+          "body":["Inter","sans-serif"],
+          "label":["Inter","sans-serif"]
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+/* ═══════════════════════════════════
+   BASE
+═══════════════════════════════════ */
+.material-symbols-outlined {
+  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+  display:inline-block; line-height:1; text-transform:none;
+  letter-spacing:normal; word-wrap:normal; white-space:nowrap; direction:ltr;
+}
+body {
+  font-family:'Inter',sans-serif; background-color:#f9f9ff;
+  min-height:max(884px,100dvh); overflow-x:hidden;
+}
+h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:#f0f3ff}
+::-webkit-scrollbar-thumb{background:#1e3a5f}
+
+/* ═══════════════════════════════════
+   PAGE SYSTEM
+═══════════════════════════════════ */
+.page { display:none; will-change:transform,opacity; }
+.page.active { display:block; }
+
+/* ═══════════════════════════════════
+   TRANSITION VEIL
+═══════════════════════════════════ */
+#veil {
+  position:fixed; inset:0; z-index:200;
+  background:linear-gradient(135deg,#022448 0%,#1e3a5f 100%);
+  opacity:0; pointer-events:none;
+  display:flex; align-items:center; justify-content:center;
+}
+#veil.active { pointer-events:all; }
+#veil-logo {
+  opacity:0; transform:scale(0.8);
+  display:flex; align-items:center; gap:12px;
+}
+#veil-logo span { color:#fecf4f; font-size:32px; }
+#veil-logo p {
+  font-family:'Barlow',sans-serif; font-weight:900;
+  font-size:22px; letter-spacing:0.25em; color:#fecf4f;
+}
+
+/* ═══════════════════════════════════
+   HEADER LOGO HOVER
+═══════════════════════════════════ */
+.logo-wrap {
+  cursor:pointer; display:flex; align-items:center; gap:12px;
+  transition:opacity 150ms ease;
+}
+.logo-wrap:hover { opacity:0.85; }
+
+/* ═══════════════════════════════════
+   DESKTOP NAV LINKS
+═══════════════════════════════════ */
+.desktop-nav {
+  position:relative; padding-bottom:4px;
+  font-family:'Barlow',sans-serif; font-weight:700;
+  text-transform:uppercase; font-size:14px; letter-spacing:-0.02em;
+  color:rgba(255,255,255,0.6);
+  transition:color 200ms ease;
+  background:none; border:none; cursor:pointer;
+}
+.desktop-nav::after {
+  content:''; position:absolute; left:0; bottom:0;
+  width:100%; height:2px; background:#fecf4f;
+  transform:scaleX(0); transform-origin:left;
+  transition:transform 250ms cubic-bezier(0.22,1,0.36,1);
+}
+.desktop-nav.is-active { color:#fecf4f; }
+.desktop-nav.is-active::after { transform:scaleX(1); }
+.desktop-nav:hover:not(.is-active) { color:rgba(255,255,255,0.9); }
+
+/* ═══════════════════════════════════
+   BOTTOM NAV INDICATOR
+═══════════════════════════════════ */
+#nav-indicator {
+  position:absolute; top:0; height:3px;
+  background:#fecf4f;
+  transition:left 300ms cubic-bezier(0.22,1,0.36,1), width 300ms cubic-bezier(0.22,1,0.36,1);
+}
+.nav-item {
+  position:relative; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:4px 0; height:100%; width:100%;
+  background:none; border:none; cursor:pointer;
+  color:#1e3a5f;
+  transition:color 200ms ease, background 150ms ease;
+}
+.nav-item .material-symbols-outlined,
+.nav-item span:last-child {
+  transition:transform 200ms cubic-bezier(0.34,1.56,0.64,1), color 200ms ease;
+}
+.nav-item.active-nav .material-symbols-outlined,
+.nav-item.active-nav span:last-child {
+  color:#022448;
+  transform:scale(1.12) translateY(-1px);
+}
+.nav-item:not(.active-nav):hover {
+  background:rgba(231,238,254,0.7);
+}
+
+/* ═══════════════════════════════════
+   HUD BAR TRANSITIONS
+═══════════════════════════════════ */
+#hud-bar { transition:background 400ms ease; }
+#hud-inner { transition:opacity 150ms ease; }
+
+/* ═══════════════════════════════════
+   TOOL TILES / CARDS
+═══════════════════════════════════ */
+.tool-tile {
+  cursor:pointer;
+  transition:
+    transform 220ms cubic-bezier(0.22,1,0.36,1),
+    box-shadow 220ms ease,
+    border-color 150ms ease;
+  will-change:transform;
+}
+.tool-tile:hover {
+  transform:translateY(-3px);
+  box-shadow:0 8px 28px rgba(2,36,72,0.13);
+  border-color:#765b00 !important;
+}
+.tool-tile:active { transform:translateY(-1px) scale(0.995); }
+.tool-tile:hover .tile-arrow {
+  transform:translateX(5px);
+  color:#765b00 !important;
+}
+.tile-arrow { transition:transform 200ms cubic-bezier(0.22,1,0.36,1), color 200ms ease; }
+.tile-icon-wrap {
+  transition:background 200ms ease, transform 200ms cubic-bezier(0.34,1.56,0.64,1);
+}
+.tool-tile:hover .tile-icon-wrap {
+  background:#dce2f3 !important;
+  transform:scale(1.08);
+}
+
+/* ═══════════════════════════════════
+   BUTTONS
+═══════════════════════════════════ */
+.btn-primary {
+  position:relative; overflow:hidden;
+  transition:transform 150ms ease, box-shadow 200ms ease;
+}
+.btn-primary::after {
+  content:''; position:absolute; inset:0;
+  background:rgba(255,255,255,0);
+  transition:background 200ms ease;
+}
+.btn-primary:hover::after { background:rgba(255,255,255,0.08); }
+.btn-primary:active { transform:scale(0.97) translateY(1px); }
+
+.btn-calculate {
+  position:relative; overflow:hidden;
+  transition:transform 120ms ease, letter-spacing 200ms ease;
+}
+.btn-calculate:active { transform:scale(0.97); }
+.btn-calculate .btn-ripple {
+  position:absolute; border-radius:50%;
+  background:rgba(255,255,255,0.25);
+  transform:scale(0); animation:ripple 550ms ease-out forwards;
+  pointer-events:none;
+}
+@keyframes ripple {
+  to { transform:scale(4); opacity:0; }
+}
+
+/* ═══════════════════════════════════
+   HERO ELEMENTS (set initial states via JS)
+═══════════════════════════════════ */
+.hero-grid-line {
+  transition:opacity 600ms ease, transform 800ms cubic-bezier(0.22,1,0.36,1);
+}
+
+/* ═══════════════════════════════════
+   BAH — PAY GRADE BUTTONS
+═══════════════════════════════════ */
+.pay-grade-btn {
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms cubic-bezier(0.34,1.56,0.64,1),
+    box-shadow 180ms ease;
+}
+.pay-grade-btn:hover:not(.active-grade) {
+  background:#dce2f3 !important;
+  transform:scale(1.04);
+}
+.pay-grade-btn.active-grade {
+  background:#022448 !important;
+  color:#fff !important;
+  transform:scale(1.06);
+  box-shadow:0 3px 10px rgba(2,36,72,0.3);
+}
+
+/* ═══════════════════════════════════
+   BAH — RESULTS REVEAL
+═══════════════════════════════════ */
+#bah-results {
+  transition:box-shadow 300ms ease;
+}
+#bah-results:hover {
+  box-shadow:0 12px 40px rgba(2,36,72,0.25);
+}
+
+/* ═══════════════════════════════════
+   BAH — METRIC CARDS
+═══════════════════════════════════ */
+.metric-card {
+  transition:transform 200ms cubic-bezier(0.22,1,0.36,1), box-shadow 200ms ease;
+}
+.metric-card:hover {
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(2,36,72,0.1);
+}
+
+/* ═══════════════════════════════════
+   VA — FORM ROWS HOVER
+═══════════════════════════════════ */
+.va-option {
+  transition:background 150ms ease, padding-left 200ms ease;
+}
+.va-option:hover { padding-left:20px; }
+
+/* ═══════════════════════════════════
+   CUSTOM ANIMATED CHECKBOX
+═══════════════════════════════════ */
+.tl-check-wrap {
+  position:relative; width:24px; height:24px; flex-shrink:0; cursor:pointer;
+}
+.tl-check-wrap input { position:absolute; opacity:0; width:0; height:0; }
+.tl-check-box {
+  position:absolute; inset:0;
+  border:2px solid #c4c6cf;
+  background:#fff;
+  transition:border-color 200ms ease, background 200ms ease;
+  display:flex; align-items:center; justify-content:center;
+}
+.tl-check-wrap input:checked ~ .tl-check-box {
+  border-color:#765b00;
+  background:#fecf4f;
+}
+.tl-check-mark {
+  width:14px; height:10px;
+  border-left:2.5px solid #022448;
+  border-bottom:2.5px solid #022448;
+  transform:rotate(-45deg) scale(0);
+  transition:transform 220ms cubic-bezier(0.34,1.56,0.64,1);
+  margin-top:-3px;
+}
+.tl-check-wrap input:checked ~ .tl-check-box .tl-check-mark {
+  transform:rotate(-45deg) scale(1);
+}
+/* Completed task style */
+.tl-task-item.is-complete .task-card {
+  opacity:0.55;
+  transition:opacity 400ms ease;
+}
+.tl-task-item.is-complete .task-title {
+  text-decoration:line-through;
+  text-decoration-color:#765b00;
+  text-decoration-thickness:2px;
+}
+
+/* ═══════════════════════════════════
+   TIMELINE SPINE FILL
+═══════════════════════════════════ */
+#tl-spine {
+  position:absolute; left:16px; top:40px; bottom:0;
+  width:2px; background:#dce2f3;
+  overflow:hidden;
+}
+#tl-spine-fill {
+  position:absolute; top:0; left:0; right:0;
+  background:linear-gradient(180deg,#fecf4f,#765b00);
+  height:0%;
+  transition:height 600ms cubic-bezier(0.22,1,0.36,1);
+}
+
+/* ═══════════════════════════════════
+   PROGRESS BAR GLOW
+═══════════════════════════════════ */
+#tl-progress-fill {
+  position:relative; overflow:hidden;
+}
+#tl-progress-fill::after {
+  content:''; position:absolute; top:0; right:0;
+  width:20px; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.6));
+  animation:progress-shimmer 1.5s ease infinite;
+}
+@keyframes progress-shimmer {
+  0%,100%{opacity:0} 50%{opacity:1}
+}
+
+/* ═══════════════════════════════════
+   STICKY BAH BAR
+═══════════════════════════════════ */
+#bah-sticky {
+  transform:translateY(100%);
+  transition:transform 350ms cubic-bezier(0.22,1,0.36,1);
+}
+#bah-sticky.visible { transform:translateY(0); }
+
+/* ═══════════════════════════════════
+   TRUST STAT NUMBERS
+═══════════════════════════════════ */
+.stat-number { font-variant-numeric:tabular-nums; }
+
+/* ═══════════════════════════════════
+   INSIGHT CARD HOVER
+═══════════════════════════════════ */
+.insight-card {
+  transition:background 200ms ease, transform 200ms cubic-bezier(0.22,1,0.36,1);
+}
+.insight-card:hover {
+  background:#dce2f3 !important;
+  transform:translateX(3px);
+}
+
+/* ═══════════════════════════════════
+   NEXT-STEP CTA CARD
+═══════════════════════════════════ */
+.next-step-card {
+  transition:background 150ms ease, transform 200ms cubic-bezier(0.22,1,0.36,1);
+  cursor:pointer;
+}
+.next-step-card:hover {
+  background:#f0f3ff !important;
+  transform:translateX(4px);
+}
+.next-step-card .next-arrow {
+  transition:transform 200ms cubic-bezier(0.34,1.56,0.64,1);
+}
+.next-step-card:hover .next-arrow { transform:translateX(6px); }
+
+/* ═══════════════════════════════════
+   VA BENEFITS LIST
+═══════════════════════════════════ */
+.va-benefit {
+  transition:transform 200ms cubic-bezier(0.22,1,0.36,1), background 150ms ease;
+  padding:6px 8px 6px 0;
+}
+.va-benefit:hover {
+  transform:translateX(4px);
+  background:rgba(254,207,79,0.08);
+}
+
+/* ═══════════════════════════════════
+   EMAIL INPUT FOCUS
+═══════════════════════════════════ */
+.email-input {
+  transition:border-color 200ms ease, background 200ms ease;
+}
+.email-input:focus {
+  border-color:#fecf4f !important;
+  background:rgba(2,36,72,0.7) !important;
+  outline:none;
+}
+
+/* ═══════════════════════════════════
+   PULSE DOT
+═══════════════════════════════════ */
+.pulse-dot {
+  animation:pulse-dot 2s cubic-bezier(0.4,0,0.6,1) infinite;
+}
+@keyframes pulse-dot {
+  0%,100%{opacity:1; transform:scale(1)}
+  50%{opacity:0.4; transform:scale(0.85)}
+}
+
+/* ═══════════════════════════════════
+   FADE-UP UTILITY (initial hidden state set by GSAP)
+═══════════════════════════════════ */
+.gsap-ready { visibility:visible; }
+
+/* ═══════════════════════════════════
+   TACTICAL GRID OVERLAY ANIMATION
+═══════════════════════════════════ */
+@keyframes grid-drift {
+  from { background-position:0 0; }
+  to   { background-position:20px 20px; }
+}
+.tactical-grid {
+  animation:grid-drift 8s linear infinite;
+}
+
+/* ═══════════════════════════════════
+   ACTIVE SIGNAL BLINK
+═══════════════════════════════════ */
+.signal-dot {
+  animation:signal-blink 1.2s ease-in-out infinite;
+}
+@keyframes signal-blink {
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.2;transform:scale(0.6)}
+}
+
+/* ═══════════════════════════════════
+   HEADER ICON SPIN ON NAVIGATE
+═══════════════════════════════════ */
+.nav-compass { transition:transform 600ms cubic-bezier(0.34,1.56,0.64,1); }
+
+/* ═══════════════════════════════════
+   CUSTOM SELECT DROPDOWN
+═══════════════════════════════════ */
+.csel { position:relative; user-select:none; }
+.csel-trigger {
+  display:flex; align-items:center; justify-content:space-between;
+  width:100%; height:48px; padding:0 16px;
+  font-family:'Inter',sans-serif; font-weight:700; font-size:14px;
+  cursor:pointer; border:none; outline:none;
+  transition:border-color 200ms ease, background 150ms ease;
+}
+.csel-trigger:focus-visible { border-color:#fecf4f !important; }
+.csel-arrow {
+  flex-shrink:0;
+  transition:transform 280ms cubic-bezier(0.34,1.56,0.64,1), color 200ms ease;
+  font-size:20px !important;
+}
+.csel.is-open .csel-arrow { transform:rotate(180deg); color:#765b00; }
+.csel-panel {
+  position:absolute; top:calc(100% + 2px); left:0; right:0; z-index:100;
+  background:#ffffff;
+  border-left:2px solid #022448; border-right:2px solid #022448; border-bottom:2px solid #022448;
+  overflow:hidden;
+  opacity:0; transform-origin:top center;
+  pointer-events:none;
+}
+.csel.is-open .csel-panel { pointer-events:all; }
+.csel-option {
+  padding:11px 16px;
+  font-family:'Inter',sans-serif; font-weight:700; font-size:13px;
+  color:#022448; cursor:pointer;
+  border-left:3px solid transparent;
+  transition:background 120ms ease, border-color 120ms ease, padding-left 150ms ease;
+}
+.csel-option:hover {
+  background:#e7eefe;
+  border-left-color:#fecf4f;
+  padding-left:20px;
+}
+.csel-option.is-selected {
+  background:#022448; color:#fecf4f;
+  border-left-color:#fecf4f;
+}
+.csel-va .csel-trigger { height:46px; font-size:13px; }
+</style>
+</head>
+
+<body class="bg-background text-on-background pb-16">
+
+<!-- ── TRANSITION VEIL ────────────────────────────────── -->
+<div id="veil">
+  <div id="veil-logo">
+    <span class="material-symbols-outlined">explore</span>
+    <p>PCSREADY</p>
+  </div>
+</div>
+
+<!-- ── HEADER ─────────────────────────────────────────── -->
+<header id="main-header" class="bg-[#1e3a5f] flex justify-between items-center w-full px-6 h-16 z-50 sticky top-0">
+  <div class="logo-wrap" onclick="navigate('home')">
+    <span class="material-symbols-outlined text-[#fecf4f] nav-compass">explore</span>
+    <span class="font-['Barlow'] font-black text-xl tracking-widest text-[#fecf4f]">PCSREADY</span>
+  </div>
+  <div class="hidden md:flex items-center gap-6">
+    <button onclick="navigate('home')" class="desktop-nav is-active" data-page="home">Home</button>
+    <button onclick="navigate('bah')" class="desktop-nav" data-page="bah">BAH</button>
+    <button onclick="navigate('va')" class="desktop-nav" data-page="va">VA Loan</button>
+    <button onclick="navigate('timeline')" class="desktop-nav" data-page="timeline">Timeline</button>
+  </div>
+  <div class="h-8 w-8 bg-surface-container-highest flex items-center justify-center border-2 border-[#fecf4f] transition-transform duration-200 hover:scale-105">
+    <span class="material-symbols-outlined text-primary text-sm">person</span>
+  </div>
+</header>
+
+<!-- ── HUD STATUS BAR ─────────────────────────────────── -->
+<div class="bg-tertiary-container flex items-center px-6 py-2 gap-4 overflow-x-auto whitespace-nowrap" id="hud-bar">
+  <div id="hud-inner" class="flex items-center gap-4"></div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     PAGE: HOME
+════════════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <section class="bg-[#1e3a5f] px-6 pt-12 pb-16 relative overflow-hidden">
+    <!-- Animated grid overlay -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none tactical-grid"
+         style="background-image:linear-gradient(#fecf4f 1px,transparent 1px),linear-gradient(90deg,#fecf4f 1px,transparent 1px);background-size:20px 20px;"></div>
+    <!-- Corner brackets -->
+    <div class="absolute top-0 right-0 w-64 h-64 opacity-10 pointer-events-none hero-grid-line">
+      <div class="absolute top-0 right-0 w-full h-full border-t-2 border-r-2 border-white translate-x-32 -translate-y-32"></div>
+    </div>
+    <div class="absolute bottom-0 left-0 w-48 h-48 opacity-10 pointer-events-none hero-grid-line">
+      <div class="absolute bottom-0 left-0 w-full h-full border-b-2 border-l-2 border-white -translate-x-24 translate-y-24"></div>
+    </div>
+    <div class="relative z-10">
+      <span id="hero-eyebrow" class="text-secondary-container font-bold text-[10px] uppercase tracking-[0.3em] mb-4 block">Operation: Relocation</span>
+      <h1 id="hero-h1" class="font-['Barlow'] font-bold text-4xl text-white leading-none tracking-tighter mb-4">Your next PCS, handled.</h1>
+      <p id="hero-p" class="font-['Inter'] font-normal text-secondary-container text-lg leading-relaxed max-w-xs">PCS intel from people who've been there.</p>
+      <div id="hero-cta" class="mt-8 flex gap-4">
+        <button onclick="navigate('bah')" class="btn-primary bg-primary px-6 py-3 font-['Barlow'] font-bold text-white uppercase text-sm tracking-widest border-b-4 border-secondary">
+          Initialize PCS
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool Tiles -->
+  <main class="px-6 -mt-8 relative z-20 space-y-4 pb-4">
+    <div onclick="navigate('bah')" class="tool-tile bg-white border border-outline-variant p-6 shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <div class="tile-icon-wrap w-12 h-12 bg-surface-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-[#765b00] text-3xl">account_balance_wallet</span>
+        </div>
+        <div>
+          <h3 class="font-['Barlow'] font-bold text-primary uppercase text-sm tracking-wide">BAH Calculator</h3>
+          <p class="text-on-surface-variant text-[11px] leading-tight">Validate housing allowances by zip/rank</p>
+        </div>
+      </div>
+      <span class="material-symbols-outlined text-outline-variant tile-arrow">chevron_right</span>
+    </div>
+    <div onclick="navigate('va')" class="tool-tile bg-white border border-outline-variant p-6 shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <div class="tile-icon-wrap w-12 h-12 bg-surface-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-[#765b00] text-3xl">assured_workload</span>
+        </div>
+        <div>
+          <h3 class="font-['Barlow'] font-bold text-primary uppercase text-sm tracking-wide">VA Loan Checker</h3>
+          <p class="text-on-surface-variant text-[11px] leading-tight">Military financing eligibility matrix</p>
+        </div>
+      </div>
+      <span class="material-symbols-outlined text-outline-variant tile-arrow">chevron_right</span>
+    </div>
+    <div onclick="navigate('timeline')" class="tool-tile bg-white border border-outline-variant p-6 shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <div class="tile-icon-wrap w-12 h-12 bg-surface-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-[#765b00] text-3xl">rocket_launch</span>
+        </div>
+        <div>
+          <h3 class="font-['Barlow'] font-bold text-primary uppercase text-sm tracking-wide">PCS Timeline</h3>
+          <p class="text-on-surface-variant text-[11px] leading-tight">90-day countdown &amp; checklist</p>
+        </div>
+      </div>
+      <span class="material-symbols-outlined text-outline-variant tile-arrow">chevron_right</span>
+    </div>
+    <div class="tool-tile bg-white border border-outline-variant p-6 shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <div class="tile-icon-wrap w-12 h-12 bg-surface-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-[#765b00] text-3xl">home</span>
+        </div>
+        <div>
+          <h3 class="font-['Barlow'] font-bold text-primary uppercase text-sm tracking-wide">Find Homes</h3>
+          <p class="text-on-surface-variant text-[11px] leading-tight">Search properties near your next PDS</p>
+        </div>
+      </div>
+      <span class="material-symbols-outlined text-outline-variant tile-arrow">chevron_right</span>
+    </div>
+  </main>
+
+  <!-- Trust Section -->
+  <section id="trust-section" class="mt-8 px-6 py-12 bg-on-tertiary-container/10 border-y border-on-tertiary-container/5">
+    <div class="flex flex-col items-start gap-4">
+      <div class="h-1 w-12 bg-secondary"></div>
+      <h2 class="font-['Barlow'] font-bold text-2xl text-primary leading-tight tracking-tight">Built by service members.<br>For service members.</h2>
+      <p class="text-on-surface-variant text-sm leading-relaxed">We strip away the civilian fluff and provide the hard data needed for a successful PCS.</p>
+      <div class="grid grid-cols-2 gap-4 mt-4 w-full">
+        <div class="bg-surface-container-lowest p-4 border-l-2 border-secondary metric-card">
+          <div class="text-primary font-black text-xl tracking-tighter stat-number" data-target="14000">14K+</div>
+          <div class="text-[10px] font-bold uppercase text-on-surface-variant">Moves Guided</div>
+        </div>
+        <div class="bg-surface-container-lowest p-4 border-l-2 border-secondary metric-card">
+          <div class="text-primary font-black text-xl tracking-tighter stat-number">100%</div>
+          <div class="text-[10px] font-bold uppercase text-on-surface-variant">Veteran Owned</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="mt-8 px-6 space-y-6 pb-8">
+    <div class="flex items-baseline justify-between border-b border-outline-variant pb-2">
+      <h2 class="font-['Barlow'] font-bold text-lg text-primary uppercase tracking-wider">Installation Map</h2>
+      <span class="text-[10px] font-bold text-secondary uppercase cursor-pointer hover:underline">View Full Intel</span>
+    </div>
+    <div class="h-64 bg-surface-container relative overflow-hidden group">
+      <div class="absolute inset-0 bg-[#1e3a5f] opacity-20"></div>
+      <div class="absolute inset-0 tactical-grid opacity-20"
+           style="background-image:linear-gradient(rgba(2,36,72,0.4) 1px,transparent 1px),linear-gradient(90deg,rgba(2,36,72,0.4) 1px,transparent 1px);background-size:32px 32px;"></div>
+      <div class="absolute inset-0 bg-primary/10 flex items-center justify-center">
+        <div class="bg-surface-container-lowest px-4 py-2 border border-primary shadow-xl transition-transform duration-300 group-hover:scale-105">
+          <span class="text-primary font-bold text-xs uppercase tracking-widest">Live Feed: San Diego, CA</span>
+        </div>
+      </div>
+      <div class="absolute bottom-2 right-2 flex items-center gap-1">
+        <div class="w-2 h-2 bg-secondary signal-dot"></div>
+        <span class="text-[8px] text-white font-bold bg-primary px-1">ACTIVE SIGNAL</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lead Capture -->
+  <section class="px-6 pb-8">
+    <div class="bg-[#1e3a5f] p-6 relative overflow-hidden group">
+      <div class="absolute top-0 right-0 opacity-5 scale-150 translate-x-8 -translate-y-4 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-[1.6]">
+        <span class="material-symbols-outlined text-[120px] text-white">star</span>
+      </div>
+      <div class="relative z-10">
+        <span class="text-secondary-container font-bold text-[10px] uppercase tracking-widest block mb-3">Mission Brief</span>
+        <h3 class="font-['Barlow'] font-bold text-xl text-white uppercase tracking-tight mb-2">Get Your PCS Intel Report</h3>
+        <p class="text-[#8aa4cf] text-xs leading-relaxed mb-5">Enter your email and we'll send you a free PCS checklist, BAH breakdown, and VA loan readiness guide.</p>
+        <div class="flex gap-2">
+          <input type="email" placeholder="your.email@mail.mil" class="email-input flex-1 bg-[#022448] border-0 border-b-2 border-[#fecf4f] text-white placeholder:text-[#8aa4cf]/50 text-sm px-3 py-3"/>
+          <button onclick="submitEmail(this)" class="btn-calculate bg-secondary-container text-[#022448] font-['Barlow'] font-black uppercase text-xs px-4 py-3 tracking-widest whitespace-nowrap hover:bg-secondary-fixed transition-colors">
+            Send Intel
+          </button>
+        </div>
+        <p class="text-[#8aa4cf]/50 text-[9px] uppercase tracking-wider mt-2">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     PAGE: BAH CALCULATOR
+════════════════════════════════════════════════════ -->
+<div id="page-bah" class="page">
+  <header class="px-6 pt-8 pb-4">
+    <span class="text-[10px] font-bold uppercase tracking-widest text-primary opacity-60 mb-1 block">Housing Allowance Calculator</span>
+    <h1 class="text-4xl font-headline font-extrabold text-primary leading-none uppercase tracking-tighter">What's Your BAH?</h1>
+  </header>
+  <main class="px-6 space-y-6 pb-32">
+
+    <!-- Form -->
+    <section id="bah-form-card" class="bg-surface-container-lowest p-6 border-b-4 border-primary">
+      <div class="grid grid-cols-1 gap-6">
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
+            <span class="material-symbols-outlined text-xs">shield</span> Service Branch
+          </label>
+          <div class="csel" id="bah-branch-csel">
+            <button type="button" class="csel-trigger bg-surface-container-low border-b-2 border-primary text-primary" onclick="toggleCsel('bah-branch-csel')">
+              <span class="csel-label">Army</span>
+              <span class="material-symbols-outlined csel-arrow text-primary/50">expand_more</span>
+            </button>
+            <div class="csel-panel shadow-xl">
+              <div class="csel-option is-selected" onclick="selectCsel('bah-branch-csel',this,'Army')">Army</div>
+              <div class="csel-option" onclick="selectCsel('bah-branch-csel',this,'Navy')">Navy</div>
+              <div class="csel-option" onclick="selectCsel('bah-branch-csel',this,'Air Force')">Air Force</div>
+              <div class="csel-option" onclick="selectCsel('bah-branch-csel',this,'Marines')">Marines</div>
+              <div class="csel-option" onclick="selectCsel('bah-branch-csel',this,'Coast Guard')">Coast Guard</div>
+              <div class="csel-option" onclick="selectCsel('bah-branch-csel',this,'Space Force')">Space Force</div>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
+            <span class="material-symbols-outlined text-xs">military_tech</span> Pay Grade
+          </label>
+          <div class="grid grid-cols-4 gap-2" id="pay-grade-grid">
+            <button onclick="selectPayGrade(this,'E5')" class="pay-grade-btn active-grade h-10 font-bold text-xs">E5</button>
+            <button onclick="selectPayGrade(this,'E6')" class="pay-grade-btn h-10 bg-surface-container-high text-primary font-bold text-xs">E6</button>
+            <button onclick="selectPayGrade(this,'O3')" class="pay-grade-btn h-10 bg-surface-container-high text-primary font-bold text-xs">O3</button>
+            <button onclick="selectPayGrade(this,'W2')" class="pay-grade-btn h-10 bg-surface-container-high text-primary font-bold text-xs">W2</button>
+            <button onclick="selectPayGrade(this,'E1')" class="pay-grade-btn h-10 bg-surface-container-high text-primary font-bold text-xs">E1</button>
+            <button onclick="selectPayGrade(this,'E4')" class="pay-grade-btn h-10 bg-surface-container-high text-primary font-bold text-xs">E4</button>
+            <button onclick="selectPayGrade(this,'O1')" class="pay-grade-btn h-10 bg-surface-container-high text-primary font-bold text-xs">O1</button>
+            <button onclick="selectPayGrade(this,'O5')" class="pay-grade-btn h-10 bg-surface-container-high text-primary font-bold text-xs">O5</button>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
+            <span class="material-symbols-outlined text-xs">location_on</span> Installation or ZIP
+          </label>
+          <div class="relative">
+            <input id="bah-location" class="w-full bg-surface-container-low border-b-2 border-primary focus:border-secondary h-12 px-4 font-bold text-primary placeholder:text-primary/30 outline-none transition-colors" placeholder="e.g. Fort Campbell" type="text"/>
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary/40">search</span>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
+            <span class="material-symbols-outlined text-xs">family_restroom</span> Dependency Status
+          </label>
+          <div class="flex gap-4">
+            <label class="flex items-center gap-2 cursor-pointer group">
+              <input checked class="hidden peer" name="dep" type="radio" value="with"/>
+              <div class="w-5 h-5 border-2 border-primary flex items-center justify-center peer-checked:bg-primary transition-all duration-200">
+                <div class="w-2 h-2 bg-white scale-0 peer-checked:scale-100 transition-transform duration-200"></div>
+              </div>
+              <span class="text-sm font-bold text-primary">With Dependents</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer group">
+              <input class="hidden peer" name="dep" type="radio" value="without"/>
+              <div class="w-5 h-5 border-2 border-primary flex items-center justify-center peer-checked:bg-primary transition-all duration-200">
+                <div class="w-2 h-2 bg-white scale-0 peer-checked:scale-100 transition-transform duration-200"></div>
+              </div>
+              <span class="text-sm font-bold text-primary">Without</span>
+            </label>
+          </div>
+        </div>
+        <button onclick="calculateBAH(this)" id="bah-calc-btn" class="btn-calculate w-full bg-primary text-white font-['Barlow'] font-bold uppercase tracking-widest py-4 text-sm relative overflow-hidden">
+          Calculate BAH
+        </button>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="bah-results" class="bg-primary-container p-6 relative overflow-hidden">
+      <div class="absolute inset-0 tactical-grid opacity-10 pointer-events-none"
+           style="background-image:linear-gradient(#fecf4f 1px,transparent 1px),linear-gradient(90deg,#fecf4f 1px,transparent 1px);background-size:20px 20px;"></div>
+      <div class="relative z-10 flex flex-col items-start gap-4">
+        <span class="text-[10px] font-black uppercase tracking-widest text-secondary-container bg-primary px-2 py-1" id="bah-year-label">2025 Projection</span>
+        <div class="space-y-0">
+          <h2 class="text-5xl font-headline font-black text-secondary-container leading-none" id="bah-amount" style="font-variant-numeric:tabular-nums">$2,350</h2>
+          <span class="text-lg font-headline font-bold text-secondary-container/80 uppercase">Per Month</span>
+        </div>
+        <div class="w-full mt-4 space-y-4">
+          <div class="flex justify-between items-end border-b border-white/10 pb-2">
+            <span class="text-[10px] font-bold uppercase text-white/60 tracking-wider">Utility Allowance</span>
+            <span class="font-bold text-white" id="bah-utility">$412</span>
+          </div>
+          <div class="flex justify-between items-end border-b border-white/10 pb-2">
+            <span class="text-[10px] font-bold uppercase text-white/60 tracking-wider">Rent Component</span>
+            <span class="font-bold text-white" id="bah-rent">$1,938</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metric Cards -->
+    <section class="grid grid-cols-3 gap-2">
+      <div class="bg-surface-container-low p-4 flex flex-col gap-1 metric-card">
+        <span class="text-[9px] font-black uppercase text-on-surface-variant">80% Level</span>
+        <span class="text-xl font-headline font-black text-primary" id="bah-80" style="font-variant-numeric:tabular-nums">$1,880</span>
+        <span class="text-[8px] font-bold text-on-surface/40 uppercase">Budget</span>
+      </div>
+      <div class="bg-secondary-container p-4 flex flex-col gap-1 metric-card">
+        <span class="text-[9px] font-black uppercase text-on-secondary-container">100% Level</span>
+        <span class="text-xl font-headline font-black text-on-secondary-container" id="bah-100" style="font-variant-numeric:tabular-nums">$2,350</span>
+        <span class="text-[8px] font-bold text-on-secondary-container/60 uppercase">Maximum</span>
+      </div>
+      <div class="bg-surface-container-low p-4 flex flex-col gap-1 metric-card">
+        <span class="text-[9px] font-black uppercase text-on-surface-variant">110% Level</span>
+        <span class="text-xl font-headline font-black text-primary" id="bah-110" style="font-variant-numeric:tabular-nums">$2,585</span>
+        <span class="text-[8px] font-bold text-on-surface/40 uppercase">Overhead</span>
+      </div>
+    </section>
+
+    <!-- Insights -->
+    <section class="space-y-4">
+      <h3 class="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+        <span class="w-2 h-2 bg-secondary signal-dot"></span> Local Market Intelligence
+      </h3>
+      <div class="insight-card bg-surface-container-high p-4 flex gap-4 items-center">
+        <div class="w-12 h-12 bg-white flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-3xl">trending_up</span>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-primary uppercase">Market Intensity: High</p>
+          <p class="text-[10px] text-on-surface-variant leading-tight">Average rental time in this area is 14 days. Recommend early application.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div onclick="navigate('va')" class="next-step-card bg-white p-5 border-b-4 border-secondary flex items-center justify-between">
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Next Objective</p>
+        <h4 class="font-headline font-bold text-lg uppercase tracking-tight text-primary">Check VA Loan Eligibility</h4>
+      </div>
+      <span class="material-symbols-outlined text-primary next-arrow">arrow_forward</span>
+    </div>
+  </main>
+
+  <!-- Sticky bar -->
+  <div id="bah-sticky" class="fixed bottom-16 left-0 w-full z-40 px-6 pointer-events-none">
+    <div class="pointer-events-auto flex justify-between items-center bg-primary text-white p-4 shadow-2xl border-t-2 border-secondary">
+      <div class="flex flex-col">
+        <span class="text-[8px] font-bold uppercase tracking-widest text-secondary">Live Calculation</span>
+        <span class="font-headline font-black text-xl" id="bah-sticky-amount" style="font-variant-numeric:tabular-nums">$2,350/mo</span>
+      </div>
+      <button onclick="navigate('home')" class="btn-calculate bg-secondary text-primary font-black uppercase text-xs px-6 py-3 tracking-widest">
+        Find Homes
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     PAGE: VA LOAN CHECKER
+════════════════════════════════════════════════════ -->
+<div id="page-va" class="page">
+  <main class="max-w-md mx-auto px-4 py-8 space-y-8 pb-24">
+    <section id="va-header" class="space-y-2">
+      <p class="text-secondary font-bold text-[10px] uppercase tracking-[0.2em]">Technical Assessment</p>
+      <h1 class="text-primary text-4xl font-black leading-none uppercase italic tracking-tighter">Are You VA Loan Eligible?</h1>
+      <p class="text-on-surface-variant text-sm font-medium border-l-4 border-secondary pl-4 py-1">Mission-critical verification for military home financing.</p>
+    </section>
+
+    <section id="va-form-card" class="bg-surface-container-lowest p-6 shadow-[0_4px_0_0_rgba(2,36,72,0.1)] border-t-4 border-primary">
+      <form class="space-y-6">
+        <div class="space-y-4">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Service Status</label>
+          <div class="grid grid-cols-1 gap-2">
+            <label class="va-option flex items-center p-4 bg-surface-container-low border-b-2 border-primary cursor-pointer">
+              <input checked class="hidden peer" name="va-status" type="radio" value="active"/>
+              <span class="w-4 h-4 border-2 border-primary flex-shrink-0 mr-4 peer-checked:bg-secondary transition-colors duration-200"></span>
+              <span class="text-sm font-bold uppercase tracking-tight text-primary">Active Duty</span>
+            </label>
+            <label class="va-option flex items-center p-4 bg-surface-container-low border-b-2 border-primary cursor-pointer">
+              <input class="hidden peer" name="va-status" type="radio" value="veteran"/>
+              <span class="w-4 h-4 border-2 border-primary flex-shrink-0 mr-4 peer-checked:bg-secondary transition-colors duration-200"></span>
+              <span class="text-sm font-bold uppercase tracking-tight text-primary">Veteran / Retired</span>
+            </label>
+            <label class="va-option flex items-center p-4 bg-surface-container-low border-b-2 border-primary cursor-pointer">
+              <input class="hidden peer" name="va-status" type="radio" value="guard"/>
+              <span class="w-4 h-4 border-2 border-primary flex-shrink-0 mr-4 peer-checked:bg-secondary transition-colors duration-200"></span>
+              <span class="text-sm font-bold uppercase tracking-tight text-primary">National Guard / Reserve</span>
+            </label>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Service Start</label>
+            <input class="w-full bg-surface-container-high border-b-2 border-primary text-sm font-bold focus:border-secondary focus:ring-0 px-2 py-2 outline-none transition-colors" type="date"/>
+          </div>
+          <div class="space-y-2">
+            <label class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Service End</label>
+            <input class="w-full bg-surface-container-high border-b-2 border-primary text-sm font-bold focus:border-secondary focus:ring-0 px-2 py-2 outline-none transition-colors" type="date"/>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Service Branch</label>
+          <div class="csel csel-va" id="va-branch-csel">
+            <button type="button" class="csel-trigger bg-surface-container-high border-b-2 border-primary text-primary" onclick="toggleCsel('va-branch-csel')">
+              <span class="csel-label">U.S. ARMY</span>
+              <span class="material-symbols-outlined csel-arrow text-primary/50">expand_more</span>
+            </button>
+            <div class="csel-panel shadow-xl">
+              <div class="csel-option is-selected" onclick="selectCsel('va-branch-csel',this,'U.S. ARMY')">U.S. ARMY</div>
+              <div class="csel-option" onclick="selectCsel('va-branch-csel',this,'U.S. NAVY')">U.S. NAVY</div>
+              <div class="csel-option" onclick="selectCsel('va-branch-csel',this,'U.S. AIR FORCE')">U.S. AIR FORCE</div>
+              <div class="csel-option" onclick="selectCsel('va-branch-csel',this,'U.S. MARINE CORPS')">U.S. MARINE CORPS</div>
+              <div class="csel-option" onclick="selectCsel('va-branch-csel',this,'U.S. COAST GUARD')">U.S. COAST GUARD</div>
+              <div class="csel-option" onclick="selectCsel('va-branch-csel',this,'U.S. SPACE FORCE')">U.S. SPACE FORCE</div>
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="checkVAEligibility(this)" class="btn-calculate w-full bg-primary text-on-primary font-headline font-bold uppercase tracking-widest py-4 relative overflow-hidden">
+          Verify Eligibility
+        </button>
+      </form>
+    </section>
+
+    <!-- Results (hidden until checked) -->
+    <section id="va-results" class="bg-primary text-white p-6 relative overflow-hidden" style="display:none">
+      <div class="absolute top-0 right-0 p-2 opacity-10 scale-150 rotate-12">
+        <span class="material-symbols-outlined text-[120px]">verified_user</span>
+      </div>
+      <div class="relative z-10 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="bg-secondary-container text-on-secondary-container p-1 flex items-center justify-center">
+            <span class="material-symbols-outlined font-bold" style="font-variation-settings:'FILL' 1;">check</span>
+          </div>
+          <h2 class="font-headline font-black text-2xl uppercase tracking-tighter">Likely Eligible</h2>
+        </div>
+        <p class="text-primary-container text-xs font-medium uppercase tracking-wider leading-relaxed">
+          Based on typical service requirements (90 days active during wartime), you meet the preliminary criteria for a VA Home Loan.
+        </p>
+        <div class="pt-4 border-t border-white/20">
+          <span class="text-[10px] font-bold uppercase opacity-60">Funding Fee Index (2025)</span>
+          <div class="mt-2 grid grid-cols-2 gap-px bg-white/10">
+            <div class="bg-primary p-2 text-[10px] font-bold uppercase tracking-tighter">Down Payment</div>
+            <div class="bg-primary p-2 text-[10px] font-bold uppercase tracking-tighter text-right">Fee (1st Use)</div>
+            <div class="bg-primary-container/30 p-2 text-[10px] font-medium">None (0%)</div>
+            <div class="bg-primary-container/30 p-2 text-[10px] font-bold text-right">2.15%</div>
+            <div class="bg-primary-container/30 p-2 text-[10px] font-medium">5% or more</div>
+            <div class="bg-primary-container/30 p-2 text-[10px] font-bold text-right">1.50%</div>
+            <div class="bg-primary-container/30 p-2 text-[10px] font-medium">10% or more</div>
+            <div class="bg-primary-container/30 p-2 text-[10px] font-bold text-right">1.25%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="va-benefits" class="bg-surface-container-low p-6 space-y-4">
+      <h3 class="font-headline font-bold text-lg uppercase tracking-tight text-primary">Strategic Advantages</h3>
+      <ul class="space-y-2">
+        <li class="va-benefit flex items-start gap-3">
+          <span class="material-symbols-outlined text-secondary text-xl" style="font-variation-settings:'FILL' 1;">verified</span>
+          <div><p class="text-sm font-bold uppercase tracking-tighter text-primary">Zero Down Payment</p>
+          <p class="text-xs text-on-surface-variant leading-tight">Purchase a home with $0 down up to conforming loan limits.</p></div>
+        </li>
+        <li class="va-benefit flex items-start gap-3">
+          <span class="material-symbols-outlined text-secondary text-xl" style="font-variation-settings:'FILL' 1;">verified</span>
+          <div><p class="text-sm font-bold uppercase tracking-tighter text-primary">No Monthly PMI</p>
+          <p class="text-xs text-on-surface-variant leading-tight">PMI is never required, saving hundreds monthly.</p></div>
+        </li>
+        <li class="va-benefit flex items-start gap-3">
+          <span class="material-symbols-outlined text-secondary text-xl" style="font-variation-settings:'FILL' 1;">verified</span>
+          <div><p class="text-sm font-bold uppercase tracking-tighter text-primary">Competitive Rates</p>
+          <p class="text-xs text-on-surface-variant leading-tight">VA loan rates are consistently lower than conventional financing.</p></div>
+        </li>
+        <li class="va-benefit flex items-start gap-3">
+          <span class="material-symbols-outlined text-secondary text-xl" style="font-variation-settings:'FILL' 1;">verified</span>
+          <div><p class="text-sm font-bold uppercase tracking-tighter text-primary">Assumable Loan</p>
+          <p class="text-xs text-on-surface-variant leading-tight">Future buyers can assume your VA loan — a major selling advantage.</p></div>
+        </li>
+      </ul>
+    </section>
+
+    <div onclick="navigate('timeline')" class="next-step-card bg-white p-6 border-b-8 border-secondary flex items-center justify-between">
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed-variant">Next Objective</p>
+        <h4 class="font-headline font-bold text-xl uppercase tracking-tighter text-primary">Build Your PCS Timeline</h4>
+      </div>
+      <span class="material-symbols-outlined text-primary next-arrow">arrow_forward</span>
+    </div>
+  </main>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     PAGE: TIMELINE PLANNER
+════════════════════════════════════════════════════ -->
+<div id="page-timeline" class="page">
+  <main class="px-6 py-8 max-w-md mx-auto pb-24">
+    <div id="tl-header" class="mb-8">
+      <h2 class="font-barlow font-bold text-3xl text-primary leading-tight uppercase tracking-tighter">Your PCS Checklist</h2>
+      <p class="text-on-surface-variant text-sm mt-1">Tactical timeline management for your next transition.</p>
+    </div>
+
+    <!-- Params -->
+    <section id="tl-params" class="bg-surface-container-low p-6 space-y-4 mb-8">
+      <h3 class="font-barlow font-bold text-xs uppercase tracking-[0.2em] text-secondary mb-2">Command Parameters</h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-on-surface-variant mb-1 ml-1">Current Base</label>
+          <input id="tl-current-base" class="w-full bg-surface-container-high border-0 border-b-2 border-primary focus:border-secondary focus:ring-0 text-sm px-3 py-3 transition-colors outline-none" placeholder="Fort Liberty, NC" type="text"/>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-on-surface-variant mb-1 ml-1">Gaining Base</label>
+          <input id="tl-gaining-base" class="w-full bg-surface-container-high border-0 border-b-2 border-primary focus:border-secondary focus:ring-0 text-sm px-3 py-3 transition-colors outline-none" placeholder="Joint Base Lewis-McChord, WA" type="text"/>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-on-surface-variant mb-1 ml-1">Report Date (T-0)</label>
+          <div class="relative">
+            <input id="tl-report-date" class="w-full bg-surface-container-high border-0 border-b-2 border-primary focus:border-secondary focus:ring-0 text-sm px-3 py-3 outline-none transition-colors" type="date"/>
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary text-xl pointer-events-none">calendar_today</span>
+          </div>
+        </div>
+      </div>
+      <button onclick="buildTimeline(this)" class="btn-calculate w-full bg-primary text-on-primary font-barlow font-bold uppercase py-4 tracking-widest text-sm relative overflow-hidden">
+        Calculate Mission Timeline
+      </button>
+    </section>
+
+    <!-- Progress -->
+    <div class="mb-6 bg-surface-container-lowest p-4 border-l-4 border-secondary">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-[10px] font-bold uppercase text-on-surface-variant">Mission Progress</span>
+        <span class="text-[10px] font-bold text-primary" id="tl-progress-label">0 of 8 complete</span>
+      </div>
+      <div class="w-full h-2 bg-surface-container-highest">
+        <div class="h-2 bg-secondary" id="tl-progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <section class="relative" id="tl-timeline">
+      <h3 class="font-barlow font-bold text-xs uppercase tracking-[0.2em] text-secondary mb-6 px-1">Tactical Timeline</h3>
+      <!-- Spine with animated fill -->
+      <div id="tl-spine">
+        <div id="tl-spine-fill"></div>
+      </div>
+
+      <!-- Today marker -->
+      <div class="relative flex items-center mb-10 z-10">
+        <div class="w-8 h-8 flex items-center justify-center bg-secondary text-on-secondary-fixed shrink-0">
+          <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">location_on</span>
+        </div>
+        <div class="ml-4 flex-1 py-1 px-3 bg-secondary-container">
+          <span class="font-['Inter'] font-bold text-[10px] uppercase text-on-secondary-container tracking-wider">Today</span>
+        </div>
+      </div>
+
+      <!-- Tasks -->
+      <div class="space-y-10" id="tl-tasks">
+
+        <!-- Task 1 -->
+        <div class="tl-task-item relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-primary text-white shrink-0 mt-1">
+            <span class="material-symbols-outlined text-lg">checklist</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-primary text-white text-[9px] font-bold px-2 py-0.5 tracking-tighter uppercase">Logistics</span>
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">-180 Days</span>
+            </div>
+            <div class="task-card bg-surface-container-lowest p-4 border-l-4 border-primary transition-all duration-300">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="task-title font-barlow font-bold text-lg text-primary uppercase leading-none">Research Gaining Installation</h4>
+                <label class="tl-check-wrap mt-1" title="Mark complete">
+                  <input type="checkbox" onchange="updateProgress(this)"/>
+                  <div class="tl-check-box"><div class="tl-check-mark"></div></div>
+                </label>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-2">Download welcome packets, research schools, and check off-post housing availability.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="tl-task-item relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-secondary text-on-secondary-fixed shrink-0 mt-1">
+            <span class="material-symbols-outlined text-lg">account_balance</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-secondary text-white text-[9px] font-bold px-2 py-0.5 tracking-tighter uppercase">Financial</span>
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">-120 Days</span>
+            </div>
+            <div class="task-card bg-surface-container-lowest p-4 border-l-4 border-secondary transition-all duration-300">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="task-title font-barlow font-bold text-lg text-primary uppercase leading-none">VA Loan Pre-Qualification</h4>
+                <label class="tl-check-wrap mt-1">
+                  <input type="checkbox" onchange="updateProgress(this)"/>
+                  <div class="tl-check-box"><div class="tl-check-mark"></div></div>
+                </label>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-2">Initialize financial review for certificate of eligibility and market rate locks.</p>
+              <button onclick="navigate('va')" class="mt-3 text-[10px] font-bold text-secondary uppercase tracking-widest hover:underline transition-all">→ Check VA Eligibility</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 3 -->
+        <div class="tl-task-item relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-primary-container text-white shrink-0 mt-1">
+            <span class="material-symbols-outlined text-lg">home</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-primary-container text-on-primary-container text-[9px] font-bold px-2 py-0.5 tracking-tighter uppercase">Housing</span>
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">-90 Days</span>
+            </div>
+            <div class="task-card bg-surface-container-lowest p-4 border-l-4 border-primary-container transition-all duration-300">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="task-title font-barlow font-bold text-lg text-primary uppercase leading-none">Home Search</h4>
+                <label class="tl-check-wrap mt-1">
+                  <input type="checkbox" onchange="updateProgress(this)"/>
+                  <div class="tl-check-box"><div class="tl-check-mark"></div></div>
+                </label>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-2">Connect with local real estate agents and schedule virtual or in-person house hunting trip.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 4 -->
+        <div class="tl-task-item relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-primary text-white shrink-0 mt-1">
+            <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-primary text-white text-[9px] font-bold px-2 py-0.5 tracking-tighter uppercase">Financial</span>
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">-90 Days</span>
+            </div>
+            <div class="task-card bg-surface-container-lowest p-4 border-l-4 border-primary transition-all duration-300">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="task-title font-barlow font-bold text-lg text-primary uppercase leading-none">Verify BAH Rate</h4>
+                <label class="tl-check-wrap mt-1">
+                  <input type="checkbox" onchange="updateProgress(this)"/>
+                  <div class="tl-check-box"><div class="tl-check-mark"></div></div>
+                </label>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-2">Confirm your BAH entitlement for your gaining duty station to set your housing budget.</p>
+              <button onclick="navigate('bah')" class="mt-3 text-[10px] font-bold text-secondary uppercase tracking-widest hover:underline">→ Calculate BAH</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 5 -->
+        <div class="tl-task-item relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-secondary text-on-secondary-fixed shrink-0 mt-1">
+            <span class="material-symbols-outlined text-lg">local_shipping</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-secondary text-white text-[9px] font-bold px-2 py-0.5 tracking-tighter uppercase">Logistics</span>
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">-60 Days</span>
+            </div>
+            <div class="task-card bg-surface-container-lowest p-4 border-l-4 border-secondary transition-all duration-300">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="task-title font-barlow font-bold text-lg text-primary uppercase leading-none">Schedule HHG Pickup</h4>
+                <label class="tl-check-wrap mt-1">
+                  <input type="checkbox" onchange="updateProgress(this)"/>
+                  <div class="tl-check-box"><div class="tl-check-mark"></div></div>
+                </label>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-2">Contact TMO to schedule household goods shipment. Book early — slots fill fast.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 6 -->
+        <div class="tl-task-item relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-primary-container text-white shrink-0 mt-1">
+            <span class="material-symbols-outlined text-lg">gavel</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-primary-container text-on-primary-container text-[9px] font-bold px-2 py-0.5 tracking-tighter uppercase">Legal</span>
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">-45 Days</span>
+            </div>
+            <div class="task-card bg-surface-container-lowest p-4 border-l-4 border-primary-container transition-all duration-300">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="task-title font-barlow font-bold text-lg text-primary uppercase leading-none">SCRA &amp; POA</h4>
+                <label class="tl-check-wrap mt-1">
+                  <input type="checkbox" onchange="updateProgress(this)"/>
+                  <div class="tl-check-box"><div class="tl-check-mark"></div></div>
+                </label>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-2">Review SCRA protections for lease termination and update Power of Attorney.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 7 -->
+        <div class="tl-task-item relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-primary text-white shrink-0 mt-1">
+            <span class="material-symbols-outlined text-lg">task_alt</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-primary text-white text-[9px] font-bold px-2 py-0.5 tracking-tighter uppercase">Admin</span>
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">-30 Days</span>
+            </div>
+            <div class="task-card bg-surface-container-lowest p-4 border-l-4 border-primary transition-all duration-300">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="task-title font-barlow font-bold text-lg text-primary uppercase leading-none">In-Process &amp; Records</h4>
+                <label class="tl-check-wrap mt-1">
+                  <input type="checkbox" onchange="updateProgress(this)"/>
+                  <div class="tl-check-box"><div class="tl-check-mark"></div></div>
+                </label>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-2">Complete out-processing checklist, update DEERS, change address with DFAS and all banks.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 8 -->
+        <div class="tl-task-item relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-secondary text-on-secondary-fixed shrink-0 mt-1">
+            <span class="material-symbols-outlined text-lg">directions_car</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-secondary text-white text-[9px] font-bold px-2 py-0.5 tracking-tighter uppercase">Logistics</span>
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">-14 Days</span>
+            </div>
+            <div class="task-card bg-surface-container-lowest p-4 border-l-4 border-secondary transition-all duration-300">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="task-title font-barlow font-bold text-lg text-primary uppercase leading-none">POV Shipment</h4>
+                <label class="tl-check-wrap mt-1">
+                  <input type="checkbox" onchange="updateProgress(this)"/>
+                  <div class="tl-check-box"><div class="tl-check-mark"></div></div>
+                </label>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-2">Drop off POV at nearest VPC. Confirm delivery timeline aligns with your report date.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Goal State -->
+        <div class="relative flex items-start z-10">
+          <div class="w-8 h-8 flex items-center justify-center bg-tertiary text-white shrink-0">
+            <span class="material-symbols-outlined text-lg">flag</span>
+          </div>
+          <div class="ml-4 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">T-0 Day</span>
+            </div>
+            <div class="bg-tertiary text-on-tertiary p-4">
+              <h4 class="font-barlow font-bold text-lg uppercase leading-none">Report Date</h4>
+              <p class="text-[10px] uppercase tracking-widest opacity-80 mt-1">Mission Completion</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tl-tasks -->
+    </section>
+  </main>
+</div>
+
+
+<!-- ── BOTTOM NAV ──────────────────────────────────────── -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#f0f3ff] relative">
+  <div id="nav-indicator"></div>
+  <button onclick="navigate('home')" class="nav-item active-nav" data-nav="home">
+    <span class="material-symbols-outlined">home</span>
+    <span class="font-['Inter'] font-bold text-[10px] uppercase tracking-wider mt-0.5">Home</span>
+  </button>
+  <button onclick="navigate('bah')" class="nav-item" data-nav="bah">
+    <span class="material-symbols-outlined">account_balance_wallet</span>
+    <span class="font-['Inter'] font-bold text-[10px] uppercase tracking-wider mt-0.5">BAH</span>
+  </button>
+  <button onclick="navigate('va')" class="nav-item" data-nav="va">
+    <span class="material-symbols-outlined">assured_workload</span>
+    <span class="font-['Inter'] font-bold text-[10px] uppercase tracking-wider mt-0.5">VA Loan</span>
+  </button>
+  <button onclick="navigate('timeline')" class="nav-item" data-nav="timeline">
+    <span class="material-symbols-outlined">rocket_launch</span>
+    <span class="font-['Inter'] font-bold text-[10px] uppercase tracking-wider mt-0.5">Timeline</span>
+  </button>
+</nav>
+
+
+<!-- ════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════ -->
+<script>
+/* ── HUD DATA ─────────────────────────────────────────── */
+const HUD = {
+  home: [
+    {label:'Status',value:'Pre-Orders'},
+    {label:'Priority',value:'High'},
+    {label:'Timeline',value:'90 Days Out'}
+  ],
+  bah: [
+    {label:'Status',value:'Pre-Deployment'},
+    {label:'Target',value:'Selected Installation'},
+    {label:'Tool',value:'BAH Calculator'}
+  ],
+  va: [
+    {label:'Status',value:'Pre-Assessment'},
+    {label:'Tool',value:'VA Loan Checker'},
+    {label:'Est. Time',value:'2 Min'}
+  ],
+  timeline: [
+    {label:'Mission Status',value:'Planning'},
+    {label:'Tool',value:'PCS Planner'},
+    {label:'Days Until T-0',value:'—',id:'days-counter'}
+  ]
+};
+
+function renderHUD(page) {
+  const inner = document.getElementById('hud-inner');
+  const items = HUD[page] || HUD.home;
+  inner.innerHTML = items.map((item,i) =>
+    `${i>0?'<span style="color:#765b00;opacity:0.6;font-size:10px">/</span>':''
+    }<div class="flex items-center gap-1">
+      <span style="color:#9ea691;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">${item.label}:</span>
+      <span style="color:#fecf4f;font-size:10px;font-weight:700;text-transform:uppercase"${item.id?` id="${item.id}"`:''} >${item.value}</span>
+    </div>`
+  ).join('');
+}
+
+function animateHUD(page) {
+  const inner = document.getElementById('hud-inner');
+  gsap.to(inner, {
+    opacity:0, y:-4, duration:0.15, ease:'power2.in',
+    onComplete: () => {
+      renderHUD(page);
+      gsap.fromTo(inner, {opacity:0,y:4}, {opacity:1,y:0, duration:0.25, ease:'power3.out'});
+    }
+  });
+}
+
+/* ── NAV INDICATOR ────────────────────────────────────── */
+function moveNavIndicator(page) {
+  const btn = document.querySelector(`[data-nav="${page}"]`);
+  if (!btn) return;
+  const indicator = document.getElementById('nav-indicator');
+  const nav = btn.parentElement;
+  const navRect = nav.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+  indicator.style.left  = (btnRect.left - navRect.left) + 'px';
+  indicator.style.width = btnRect.width + 'px';
+}
+
+/* ── COMPASS SPIN ─────────────────────────────────────── */
+function spinCompass() {
+  const compass = document.querySelector('.nav-compass');
+  gsap.to(compass, {rotation:360, duration:0.6, ease:'power2.out',
+    onComplete: () => gsap.set(compass, {rotation:0}) });
+}
+
+/* ── PAGE ENTRANCE ANIMATIONS ─────────────────────────── */
+function animatePageIn(page) {
+  const tl = gsap.timeline();
+  if (page === 'home') {
+    tl.from('#hero-eyebrow',  {opacity:0,y:12,duration:0.4,ease:'power3.out'})
+      .from('#hero-h1',       {opacity:0,y:20,duration:0.5,ease:'power3.out'},'-=0.25')
+      .from('#hero-p',        {opacity:0,y:14,duration:0.4,ease:'power3.out'},'-=0.25')
+      .from('#hero-cta',      {opacity:0,y:10,duration:0.35,ease:'power3.out'},'-=0.2')
+      .from('.tool-tile',     {opacity:0,y:18,stagger:0.07,duration:0.4,ease:'power3.out'},'-=0.15')
+      .from('#trust-section', {opacity:0,y:14,duration:0.4,ease:'power3.out'},'-=0.1');
+  }
+  else if (page === 'bah') {
+    tl.from('header',         {opacity:0,y:-10,duration:0.35,ease:'power3.out'})
+      .from('#bah-form-card', {opacity:0,y:20,duration:0.45,ease:'power3.out'},'-=0.15')
+      .from('#bah-results',   {opacity:0,y:16,duration:0.4,ease:'power3.out'},'-=0.1')
+      .from('.metric-card',   {opacity:0,y:12,stagger:0.06,duration:0.35,ease:'power3.out'},'-=0.1');
+    setTimeout(() => {
+      const sticky = document.getElementById('bah-sticky');
+      sticky.classList.add('visible');
+    }, 500);
+  }
+  else if (page === 'va') {
+    tl.from('#va-header',    {opacity:0,y:16,duration:0.4,ease:'power3.out'})
+      .from('#va-form-card', {opacity:0,y:20,duration:0.45,ease:'power3.out'},'-=0.2')
+      .from('.va-benefit',   {opacity:0,x:-10,stagger:0.06,duration:0.35,ease:'power3.out'},'-=0.1');
+  }
+  else if (page === 'timeline') {
+    tl.from('#tl-header', {opacity:0,y:14,duration:0.4,ease:'power3.out'})
+      .from('#tl-params', {opacity:0,y:18,duration:0.4,ease:'power3.out'},'-=0.2')
+      .from('.tl-task-item', {opacity:0,x:-16,stagger:0.07,duration:0.4,ease:'power3.out'},'-=0.1');
+    updateDaysCounter();
+  }
+}
+
+/* ── MAIN ROUTER ──────────────────────────────────────── */
+let currentPage = 'home';
+let isNavigating = false;
+
+function navigate(toPage) {
+  if (toPage === currentPage || isNavigating) return;
+  isNavigating = true;
+  spinCompass();
+
+  const fromEl = document.getElementById('page-' + currentPage);
+  const toEl   = document.getElementById('page-' + toPage);
+  const veil   = document.getElementById('veil');
+  const veilLogo = document.getElementById('veil-logo');
+
+  // Update nav immediately
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active-nav'));
+  const activeBtn = document.querySelector(`[data-nav="${toPage}"]`);
+  if (activeBtn) activeBtn.classList.add('active-nav');
+  moveNavIndicator(toPage);
+
+  // Desktop nav
+  document.querySelectorAll('.desktop-nav').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.page === toPage);
+  });
+
+  // Animate HUD
+  animateHUD(toPage);
+
+  // Hide BAH sticky on non-BAH pages
+  document.getElementById('bah-sticky').classList.remove('visible');
+
+  // Phase 1: slide out current page + veil in simultaneously
+  gsap.timeline()
+    .to(fromEl, {opacity:0, x:-28, duration:0.22, ease:'power2.in'})
+    .to(veil,   {opacity:0.92, duration:0.18, ease:'power2.inOut'}, '-=0.15')
+    .to(veilLogo, {opacity:1, scale:1, duration:0.2, ease:'back.out(1.5)'}, '-=0.05')
+    .call(() => {
+      // Swap pages under the veil — set toEl fully visible so children
+      // can be pre-set to their "from" states before the veil lifts
+      gsap.set(fromEl, {display:'none', x:0, opacity:1});
+      gsap.set(toEl,   {display:'block', opacity:1, x:0});
+      toEl.classList.add('active');
+      fromEl.classList.remove('active');
+      window.scrollTo(0,0);
+      // Pre-set child elements to their animated-from state WHILE veil covers —
+      // eliminates the visible flash before gsap.from() snaps them to opacity:0
+      animatePageIn(toPage);
+    })
+    .to(veilLogo, {opacity:0, scale:0.9, duration:0.15, ease:'power2.in'}, '+=0.12')
+    .to(veil,     {opacity:0, duration:0.25, ease:'power2.out'})
+    .call(() => {
+      gsap.set(veil, {pointerEvents:'none'});
+      currentPage = toPage;
+      isNavigating = false;
+    });
+}
+
+/* ── BAH CALCULATOR ───────────────────────────────────── */
+const BAH_TABLE = {
+  'E1':1200,'E4':1620,'E5':2350,'E6':2640,
+  'O1':2100,'O3':2800,'O5':3400,'W2':2500
+};
+let selectedGrade = 'E5';
+
+function selectPayGrade(btn, grade) {
+  selectedGrade = grade;
+  document.querySelectorAll('.pay-grade-btn').forEach(b => {
+    b.classList.remove('active-grade','bg-primary','text-white');
+    b.classList.add('bg-surface-container-high','text-primary');
+  });
+  btn.classList.add('active-grade');
+  btn.classList.remove('bg-surface-container-high','text-primary');
+  gsap.fromTo(btn, {scale:0.9}, {scale:1, duration:0.3, ease:'back.out(2)'});
+}
+
+function tweenNumber(el, toVal) {
+  const obj = {val: parseFloat(el.textContent.replace(/[$,+]/g,'')) || 0};
+  gsap.to(obj, {
+    val: toVal, duration:0.9, ease:'power2.out',
+    onUpdate: () => { el.textContent = '$' + Math.round(obj.val).toLocaleString(); }
+  });
+}
+
+function addRipple(btn) {
+  const rect = btn.getBoundingClientRect();
+  const r = document.createElement('span');
+  r.className = 'btn-ripple';
+  r.style.cssText = `width:${btn.offsetWidth*2}px;height:${btn.offsetWidth*2}px;top:50%;left:50%;margin-top:-${btn.offsetWidth}px;margin-left:-${btn.offsetWidth}px;`;
+  btn.appendChild(r);
+  setTimeout(() => r.remove(), 600);
+}
+
+function calculateBAH(btn) {
+  addRipple(btn);
+  const base  = BAH_TABLE[selectedGrade] || 2350;
+  const dep   = document.querySelector('input[name="dep"]:checked')?.value === 'with';
+  const total = dep ? base : Math.round(base * 0.85);
+  const util  = Math.round(total * 0.175);
+  const rent  = total - util;
+
+  tweenNumber(document.getElementById('bah-amount'), total);
+  tweenNumber(document.getElementById('bah-utility'), util);
+  tweenNumber(document.getElementById('bah-rent'), rent);
+  tweenNumber(document.getElementById('bah-80'), Math.round(total * 0.8));
+  tweenNumber(document.getElementById('bah-100'), total);
+  tweenNumber(document.getElementById('bah-110'), Math.round(total * 1.1));
+
+  // Sticky bar
+  const stickyEl = document.getElementById('bah-sticky-amount');
+  const obj2 = {val: 0};
+  gsap.to(obj2, {val:total, duration:0.9, ease:'power2.out',
+    onUpdate:()=>{ stickyEl.textContent = '$'+Math.round(obj2.val).toLocaleString()+'/mo'; }});
+
+  document.getElementById('bah-year-label').textContent = new Date().getFullYear() + ' Projection';
+
+  // Animate results card
+  gsap.fromTo('#bah-results', {scale:0.98,opacity:0.6}, {scale:1,opacity:1, duration:0.5, ease:'back.out(1.4)'});
+  // Metric cards pop
+  gsap.fromTo('.metric-card', {scale:0.95,opacity:0.5}, {scale:1,opacity:1, stagger:0.05, duration:0.35, ease:'back.out(1.6)'});
+}
+
+/* ── VA CHECKER ───────────────────────────────────────── */
+function checkVAEligibility(btn) {
+  addRipple(btn);
+  const results = document.getElementById('va-results');
+  gsap.set(results, {display:'block', opacity:0, y:20});
+  gsap.to(results, {opacity:1, y:0, duration:0.5, ease:'power3.out',
+    onStart: () => setTimeout(()=> results.scrollIntoView({behavior:'smooth',block:'start'}), 50)
+  });
+  // Stagger the benefit items
+  gsap.from('.va-benefit', {opacity:0, x:-12, stagger:0.08, duration:0.35, ease:'power3.out', delay:0.2});
+}
+
+/* ── TIMELINE ─────────────────────────────────────────── */
+function updateProgress(checkbox) {
+  const items = document.querySelectorAll('.tl-task-item');
+  const boxes = document.querySelectorAll('.tl-check-wrap input');
+  const checked = document.querySelectorAll('.tl-check-wrap input:checked').length;
+  const total   = boxes.length;
+  const pct     = total ? (checked / total) * 100 : 0;
+
+  document.getElementById('tl-progress-label').textContent = checked + ' of ' + total + ' complete';
+  gsap.to('#tl-progress-fill', {width:pct+'%', duration:0.55, ease:'power2.out'});
+  gsap.to('#tl-spine-fill',    {height:pct+'%', duration:0.7, ease:'power2.out'});
+
+  // Toggle complete state on parent task item
+  if (checkbox) {
+    const taskItem = checkbox.closest('.tl-task-item');
+    if (taskItem) {
+      taskItem.classList.toggle('is-complete', checkbox.checked);
+      if (checkbox.checked) {
+        gsap.to(taskItem.querySelector('.task-card'), {
+          backgroundColor:'#f0f3ff', borderLeftColor:'#765b00',
+          duration:0.3, ease:'power2.out'
+        });
+      } else {
+        gsap.to(taskItem.querySelector('.task-card'), {
+          backgroundColor:'#ffffff',
+          duration:0.3, ease:'power2.out'
+        });
+      }
+    }
+  }
+}
+
+function buildTimeline(btn) {
+  addRipple(btn);
+  const reportDate = document.getElementById('tl-report-date').value;
+  if (reportDate) updateDaysCounter(reportDate);
+  gsap.to('#tl-timeline', {scrollTop:0});
+  setTimeout(() => {
+    document.getElementById('tl-timeline').scrollIntoView({behavior:'smooth'});
+    // Re-stagger tasks
+    gsap.from('.tl-task-item', {opacity:0, x:-16, stagger:0.06, duration:0.4, ease:'power3.out'});
+  }, 100);
+}
+
+function updateDaysCounter(dateStr) {
+  const el = document.getElementById('days-counter');
+  if (!el) return;
+  const src = dateStr || document.getElementById('tl-report-date')?.value;
+  if (!src) { el.textContent = '—'; return; }
+  const diff = Math.ceil((new Date(src) - new Date()) / 86400000);
+  const display = diff > 0 ? diff.toString() : 'T-0';
+  el.textContent = diff > 0 ? diff : 'REACHED';
+}
+
+/* ── EMAIL SUBMIT ─────────────────────────────────────── */
+function submitEmail(btn) {
+  addRipple(btn);
+  gsap.to(btn, {scale:0.95, duration:0.1, yoyo:true, repeat:1,
+    onComplete:() => {
+      btn.textContent = '✓ Sent';
+      btn.style.background = '#022448';
+      btn.style.color = '#fecf4f';
+    }
+  });
+}
+
+/* ── CUSTOM SELECT ────────────────────────────────────── */
+let _openCsel = null; // track currently open dropdown
+
+function toggleCsel(id) {
+  const wrap = document.getElementById(id);
+  const isOpen = wrap.classList.contains('is-open');
+  // Close any other open dropdown first
+  if (_openCsel && _openCsel !== id) closeCsel(_openCsel);
+  isOpen ? closeCsel(id) : openCsel(id);
+}
+
+function openCsel(id) {
+  const wrap  = document.getElementById(id);
+  const panel = wrap.querySelector('.csel-panel');
+  const arrow = wrap.querySelector('.csel-arrow');
+  wrap.classList.add('is-open');
+  _openCsel = id;
+  // Measure natural height, animate from 0
+  gsap.set(panel, {display:'block', opacity:0, scaleY:0.88, transformOrigin:'top center'});
+  gsap.to(panel, {opacity:1, scaleY:1, duration:0.22, ease:'power3.out'});
+  gsap.to(arrow, {color:'#765b00', duration:0.2});
+}
+
+function closeCsel(id) {
+  const wrap  = document.getElementById(id);
+  const panel = wrap.querySelector('.csel-panel');
+  const arrow = wrap.querySelector('.csel-arrow');
+  wrap.classList.remove('is-open');
+  if (_openCsel === id) _openCsel = null;
+  gsap.to(panel, {
+    opacity:0, scaleY:0.88, duration:0.16, ease:'power2.in',
+    onComplete: () => gsap.set(panel, {display:'none', scaleY:1})
+  });
+  gsap.to(arrow, {color:'rgba(2,36,72,0.5)', duration:0.15});
+}
+
+function selectCsel(id, optEl, value) {
+  const wrap  = document.getElementById(id);
+  // Update label
+  wrap.querySelector('.csel-label').textContent = value;
+  // Update selected state
+  wrap.querySelectorAll('.csel-option').forEach(o => o.classList.remove('is-selected'));
+  optEl.classList.add('is-selected');
+  // Brief flash on the trigger to confirm
+  gsap.fromTo(wrap.querySelector('.csel-trigger'),
+    {background:'#dce2f3'}, {background:'', duration:0.35, ease:'power2.out'}
+  );
+  closeCsel(id);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (_openCsel && !document.getElementById(_openCsel).contains(e.target)) {
+    closeCsel(_openCsel);
+  }
+});
+
+/* ── BOOT ─────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  // Set initial nav indicator
+  moveNavIndicator('home');
+  renderHUD('home');
+  // Animate home page in on first load
+  gsap.set('#page-home', {display:'block'});
+  animatePageIn('home');
+  // Observe page active state properly
+  document.getElementById('page-home').classList.add('active');
+});
+
+// Re-position indicator on resize
+window.addEventListener('resize', () => moveNavIndicator(currentPage));
+</script>
+
+</body>
+</html>
