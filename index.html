@@ -2,7 +2,7 @@
 <html class="light" lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>PCSREADY | Tactical Relocation Intelligence</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -543,6 +543,40 @@ h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
   border-top:4px solid #fecf4f;
   box-shadow:0 20px 60px rgba(0,0,0,0.4);
 }
+
+/* ═══════════════════════════════════
+   BOTTOM NAV — SAFE AREA & MOBILE
+═══════════════════════════════════ */
+/* Ensure nav is always above all content layers */
+.bottom-nav { z-index:50; }
+
+/* iOS safe-area inset support (iPhone X and newer) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bottom-nav {
+    /* Expand the nav tray to cover the home-indicator zone */
+    padding-bottom: env(safe-area-inset-bottom);
+    /* Keep tappable buttons in the top 64px strip */
+    align-items: flex-start !important;
+  }
+  .bottom-nav .nav-item {
+    /* Pin buttons to the 64px zone; safe area is empty tray below */
+    height: 4rem !important;
+  }
+  /* Push page content clear of the expanded nav */
+  body {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom)) !important;
+  }
+  /* Keep BAH floating bar just above the nav tray */
+  #bah-sticky {
+    bottom: calc(4rem + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Prevent content from scrolling behind the nav on any device */
+.page { padding-bottom: 0; }
+
+/* Ensure nav indicator stays within the button strip */
+#nav-indicator { z-index:1; }
 </style>
 </head>
 
@@ -1306,7 +1340,7 @@ h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
 </div>
 
 <!-- ── BOTTOM NAV ──────────────────────────────────────── -->
-<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#f0f3ff]">
+<nav class="bottom-nav fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#f0f3ff]" style="border-top:1px solid #c4c6cf;box-shadow:0 -2px 12px rgba(2,36,72,0.08);">
   <div id="nav-indicator"></div>
   <button onclick="navigate('home')" class="nav-item active-nav" data-nav="home">
     <span class="material-symbols-outlined">home</span>
