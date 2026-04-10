@@ -499,6 +499,50 @@ h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
   border-left-color:#fecf4f;
 }
 .csel-va .csel-trigger { height:46px; font-size:13px; }
+
+/* ═══════════════════════════════════
+   BAH SKELETON SHIMMER
+═══════════════════════════════════ */
+#bah-results.is-calculating::after {
+  content:''; position:absolute; inset:0; z-index:30;
+  background:linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.18) 50%,
+    transparent 70%
+  );
+  background-size:280% 100%;
+  animation:bah-shimmer 0.55s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes bah-shimmer {
+  from { background-position:220% center; }
+  to   { background-position:-60% center; }
+}
+
+/* ═══════════════════════════════════
+   CONFETTI PARTICLES
+═══════════════════════════════════ */
+.confetti-particle {
+  position:fixed; width:9px; height:9px;
+  pointer-events:none; z-index:500;
+  will-change:transform,opacity;
+}
+
+/* ═══════════════════════════════════
+   MISSION COMPLETE OVERLAY
+═══════════════════════════════════ */
+#mission-complete-overlay {
+  display:none; position:fixed; inset:0; z-index:400;
+  pointer-events:none;
+  align-items:center; justify-content:center;
+}
+#mission-complete-banner {
+  background:#1f2617; color:#dde6ce;
+  padding:28px 40px; text-align:center;
+  border-top:4px solid #fecf4f;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+}
 </style>
 </head>
 
@@ -540,8 +584,8 @@ h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
 <div id="page-home" class="page active">
   <section class="bg-[#1e3a5f] px-6 pt-12 pb-16 relative overflow-hidden">
     <!-- Animated grid overlay -->
-    <div class="absolute inset-0 opacity-10 pointer-events-none tactical-grid"
-         style="background-image:linear-gradient(#fecf4f 1px,transparent 1px),linear-gradient(90deg,#fecf4f 1px,transparent 1px);background-size:20px 20px;"></div>
+    <div id="hero-tactical-grid" class="absolute inset-0 opacity-10 pointer-events-none tactical-grid"
+         style="background-image:linear-gradient(#fecf4f 1px,transparent 1px),linear-gradient(90deg,#fecf4f 1px,transparent 1px);background-size:20px 20px;transform-origin:center center;"></div>
     <!-- Corner brackets -->
     <div class="absolute top-0 right-0 w-64 h-64 opacity-10 pointer-events-none hero-grid-line">
       <div class="absolute top-0 right-0 w-full h-full border-t-2 border-r-2 border-white translate-x-32 -translate-y-32"></div>
@@ -621,7 +665,7 @@ h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
       <p class="text-on-surface-variant text-sm leading-relaxed">We strip away the civilian fluff and provide the hard data needed for a successful PCS.</p>
       <div class="grid grid-cols-2 gap-4 mt-4 w-full">
         <div class="bg-surface-container-lowest p-4 border-l-2 border-secondary metric-card">
-          <div class="text-primary font-black text-xl tracking-tighter stat-number" data-target="14000">14K+</div>
+          <div class="text-primary font-black text-xl tracking-tighter stat-number" data-target="14000" data-suffix="K+">14K+</div>
           <div class="text-[10px] font-bold uppercase text-on-surface-variant">Moves Guided</div>
         </div>
         <div class="bg-surface-container-lowest p-4 border-l-2 border-secondary metric-card">
@@ -633,7 +677,7 @@ h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
   </section>
 
   <!-- Map Section -->
-  <section class="mt-8 px-6 space-y-6 pb-8">
+  <section id="map-section" class="mt-8 px-6 space-y-6 pb-8">
     <div class="flex items-baseline justify-between border-b border-outline-variant pb-2">
       <h2 class="font-['Barlow'] font-bold text-lg text-primary uppercase tracking-wider">Installation Map</h2>
       <span class="text-[10px] font-bold text-secondary uppercase cursor-pointer hover:underline">View Full Intel</span>
@@ -655,7 +699,7 @@ h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
   </section>
 
   <!-- Lead Capture -->
-  <section class="px-6 pb-8">
+  <section id="lead-section" class="px-6 pb-8">
     <div class="bg-[#1e3a5f] p-6 relative overflow-hidden group">
       <div class="absolute top-0 right-0 opacity-5 scale-150 translate-x-8 -translate-y-4 transition-transform duration-700 group-hover:rotate-12 group-hover:scale-[1.6]">
         <span class="material-symbols-outlined text-[120px] text-white">star</span>
@@ -1252,8 +1296,17 @@ h1,h2,h3,h4,.font-headline,.font-barlow { font-family:'Barlow',sans-serif; }
 </div>
 
 
+<!-- ── MISSION COMPLETE OVERLAY ───────────────────────── -->
+<div id="mission-complete-overlay">
+  <div id="mission-complete-banner">
+    <div style="font-family:'Barlow',sans-serif;font-weight:700;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#fecf4f;margin-bottom:6px;">Status Update</div>
+    <div style="font-family:'Barlow',sans-serif;font-weight:900;font-size:36px;letter-spacing:-0.02em;text-transform:uppercase;line-height:1;color:#dde6ce;">Mission Complete</div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(221,230,206,0.55);margin-top:8px;">All objectives secured</div>
+  </div>
+</div>
+
 <!-- ── BOTTOM NAV ──────────────────────────────────────── -->
-<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#f0f3ff] relative">
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-[#f0f3ff]">
   <div id="nav-indicator"></div>
   <button onclick="navigate('home')" class="nav-item active-nav" data-nav="home">
     <span class="material-symbols-outlined">home</span>
@@ -1353,7 +1406,9 @@ function animatePageIn(page) {
       .from('#hero-p',        {opacity:0,y:14,duration:0.4,ease:'power3.out'},'-=0.25')
       .from('#hero-cta',      {opacity:0,y:10,duration:0.35,ease:'power3.out'},'-=0.2')
       .from('.tool-tile',     {opacity:0,y:18,stagger:0.07,duration:0.4,ease:'power3.out'},'-=0.15')
-      .from('#trust-section', {opacity:0,y:14,duration:0.4,ease:'power3.out'},'-=0.1');
+      .from('#trust-section', {opacity:0,y:14,duration:0.4,ease:'power3.out'},'-=0.1')
+      .from('#map-section',   {opacity:0,y:18,duration:0.45,ease:'power3.out'},'+=0.05')
+      .from('#lead-section',  {opacity:0,y:14,duration:0.4,ease:'power3.out'},'-=0.2');
   }
   else if (page === 'bah') {
     tl.from('header',         {opacity:0,y:-10,duration:0.35,ease:'power3.out'})
@@ -1472,31 +1527,45 @@ function addRipple(btn) {
 
 function calculateBAH(btn) {
   addRipple(btn);
-  const base  = BAH_TABLE[selectedGrade] || 2350;
-  const dep   = document.querySelector('input[name="dep"]:checked')?.value === 'with';
-  const total = dep ? base : Math.round(base * 0.85);
-  const util  = Math.round(total * 0.175);
-  const rent  = total - util;
 
-  tweenNumber(document.getElementById('bah-amount'), total);
-  tweenNumber(document.getElementById('bah-utility'), util);
-  tweenNumber(document.getElementById('bah-rent'), rent);
-  tweenNumber(document.getElementById('bah-80'), Math.round(total * 0.8));
-  tweenNumber(document.getElementById('bah-100'), total);
-  tweenNumber(document.getElementById('bah-110'), Math.round(total * 1.1));
+  // ── skeleton / calculating state ──────────────────────
+  const resultsEl = document.getElementById('bah-results');
+  btn.disabled = true;
+  gsap.to(btn, {opacity:0.62, duration:0.1});
+  resultsEl.classList.add('is-calculating');
+  gsap.to(resultsEl, {opacity:0.52, scale:0.99, duration:0.15});
 
-  // Sticky bar
-  const stickyEl = document.getElementById('bah-sticky-amount');
-  const obj2 = {val: 0};
-  gsap.to(obj2, {val:total, duration:0.9, ease:'power2.out',
-    onUpdate:()=>{ stickyEl.textContent = '$'+Math.round(obj2.val).toLocaleString()+'/mo'; }});
+  setTimeout(() => {
+    btn.disabled = false;
+    gsap.to(btn, {opacity:1, duration:0.12});
+    resultsEl.classList.remove('is-calculating');
 
-  document.getElementById('bah-year-label').textContent = new Date().getFullYear() + ' Projection';
+    const base  = BAH_TABLE[selectedGrade] || 2350;
+    const dep   = document.querySelector('input[name="dep"]:checked')?.value === 'with';
+    const total = dep ? base : Math.round(base * 0.85);
+    const util  = Math.round(total * 0.175);
+    const rent  = total - util;
 
-  // Animate results card
-  gsap.fromTo('#bah-results', {scale:0.98,opacity:0.6}, {scale:1,opacity:1, duration:0.5, ease:'back.out(1.4)'});
-  // Metric cards pop
-  gsap.fromTo('.metric-card', {scale:0.95,opacity:0.5}, {scale:1,opacity:1, stagger:0.05, duration:0.35, ease:'back.out(1.6)'});
+    tweenNumber(document.getElementById('bah-amount'), total);
+    tweenNumber(document.getElementById('bah-utility'), util);
+    tweenNumber(document.getElementById('bah-rent'), rent);
+    tweenNumber(document.getElementById('bah-80'), Math.round(total * 0.8));
+    tweenNumber(document.getElementById('bah-100'), total);
+    tweenNumber(document.getElementById('bah-110'), Math.round(total * 1.1));
+
+    // Sticky bar
+    const stickyEl = document.getElementById('bah-sticky-amount');
+    const obj2 = {val: 0};
+    gsap.to(obj2, {val:total, duration:0.9, ease:'power2.out',
+      onUpdate:()=>{ stickyEl.textContent = '$'+Math.round(obj2.val).toLocaleString()+'/mo'; }});
+
+    document.getElementById('bah-year-label').textContent = new Date().getFullYear() + ' Projection';
+
+    // Animate results card
+    gsap.fromTo('#bah-results', {scale:0.98,opacity:0.6}, {scale:1,opacity:1, duration:0.5, ease:'back.out(1.4)'});
+    // Metric cards pop
+    gsap.fromTo('.metric-card', {scale:0.95,opacity:0.5}, {scale:1,opacity:1, stagger:0.05, duration:0.35, ease:'back.out(1.6)'});
+  }, 380);
 }
 
 /* ── VA CHECKER ───────────────────────────────────────── */
@@ -1523,11 +1592,21 @@ function updateProgress(checkbox) {
   gsap.to('#tl-progress-fill', {width:pct+'%', duration:0.55, ease:'power2.out'});
   gsap.to('#tl-spine-fill',    {height:pct+'%', duration:0.7, ease:'power2.out'});
 
+  // Mission complete celebration at 100%
+  if (pct === 100) setTimeout(fireMissionComplete, 400);
+
   // Toggle complete state on parent task item
   if (checkbox) {
     const taskItem = checkbox.closest('.tl-task-item');
     if (taskItem) {
       taskItem.classList.toggle('is-complete', checkbox.checked);
+
+      // Row bounce micro-animation
+      gsap.fromTo(taskItem,
+        {x: checkbox.checked ? -9 : 5},
+        {x:0, duration:0.5, ease:'back.out(3.5)'}
+      );
+
       if (checkbox.checked) {
         gsap.to(taskItem.querySelector('.task-card'), {
           backgroundColor:'#f0f3ff', borderLeftColor:'#765b00',
@@ -1598,6 +1677,10 @@ function openCsel(id) {
   gsap.set(panel, {display:'block', opacity:0, scaleY:0.88, transformOrigin:'top center'});
   gsap.to(panel, {opacity:1, scaleY:1, duration:0.22, ease:'power3.out'});
   gsap.to(arrow, {color:'#765b00', duration:0.2});
+  // Stagger options in from the left
+  gsap.from(wrap.querySelectorAll('.csel-option'), {
+    x:-10, opacity:0, stagger:0.045, duration:0.22, ease:'power3.out', delay:0.06
+  });
 }
 
 function closeCsel(id) {
@@ -1648,6 +1731,95 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Re-position indicator on resize
 window.addEventListener('resize', () => moveNavIndicator(currentPage));
+
+/* ── MISSION COMPLETE CELEBRATION ────────────────────── */
+function fireMissionComplete() {
+  const overlay = document.getElementById('mission-complete-overlay');
+  const banner  = document.getElementById('mission-complete-banner');
+  gsap.set(overlay, {display:'flex'});
+  gsap.fromTo(banner,
+    {opacity:0, scale:0.82, y:24},
+    {opacity:1, scale:1, y:0, duration:0.55, ease:'back.out(1.8)',
+      onComplete: () => {
+        gsap.to(banner, {opacity:0, y:-14, scale:0.94, duration:0.4, ease:'power2.in', delay:2.2,
+          onComplete: () => gsap.set(overlay, {display:'none'})
+        });
+      }
+    }
+  );
+  // Confetti burst — 20 particles in all directions
+  const colors = ['#fecf4f','#022448','#1e3a5f','#765b00','#ffffff','#fecf4f','#dde6ce'];
+  const cx = window.innerWidth  / 2;
+  const cy = window.innerHeight / 2;
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    const isRect = i % 3 === 0;
+    p.style.cssText = `background:${colors[i % colors.length]};`
+      + (isRect ? `width:12px;height:5px;` : `width:8px;height:8px;`);
+    document.body.appendChild(p);
+    gsap.set(p, {x:cx, y:cy, opacity:1, rotation:0});
+    const angle = (i / 20) * Math.PI * 2;
+    const dist  = 110 + Math.random() * 200;
+    gsap.to(p, {
+      x: cx + Math.cos(angle) * dist,
+      y: cy + Math.sin(angle) * dist - 80,
+      opacity: 0,
+      rotation: Math.random() * 900 - 450,
+      duration: 0.85 + Math.random() * 0.55,
+      ease: 'power2.out',
+      delay: Math.random() * 0.1,
+      onComplete: () => p.remove()
+    });
+  }
+}
+
+/* ── STAT COUNTER (TRUST SECTION) ────────────────────── */
+(function initStatCounters() {
+  const els = document.querySelectorAll('#trust-section .stat-number[data-target]');
+  if (!els.length) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting || entry.target._counted) return;
+      entry.target._counted = true;
+      const target = parseInt(entry.target.dataset.target, 10);
+      const suffix = entry.target.dataset.suffix || '';
+      const divisor = suffix.includes('K') ? 1000 : 1;
+      const obj = {val: 0};
+      gsap.to(obj, {
+        val: target / divisor, duration: 1.4, ease: 'power2.out',
+        onUpdate: () => {
+          entry.target.textContent = Math.round(obj.val) + suffix;
+        }
+      });
+    });
+  }, {threshold: 0.6});
+  els.forEach(el => observer.observe(el));
+})();
+
+/* ── MOUSE PARALLAX ON HERO GRID ─────────────────────── */
+(function initHeroParallax() {
+  const heroSection = document.querySelector('#page-home > section');
+  const heroGrid    = document.getElementById('hero-tactical-grid');
+  if (!heroSection || !heroGrid) return;
+
+  // Slightly over-size so edges don't expose during movement
+  gsap.set(heroGrid, {scale:1.08});
+
+  heroSection.addEventListener('mousemove', (e) => {
+    const rect = heroSection.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) / rect.width  - 0.5;
+    const cy = (e.clientY - rect.top)  / rect.height - 0.5;
+    gsap.to(heroGrid, {
+      x: cx * 22, y: cy * 14,
+      duration: 0.9, ease: 'power2.out',
+      overwrite: 'auto'
+    });
+  });
+  heroSection.addEventListener('mouseleave', () => {
+    gsap.to(heroGrid, {x:0, y:0, duration:1.1, ease:'power2.out', overwrite:'auto'});
+  });
+})();
 </script>
 
 </body>
